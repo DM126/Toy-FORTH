@@ -34,6 +34,12 @@ private:
 	//Returns true if the token is in the symbol table.
 	bool isSymbol(const Token& t);
 
+	//Checks the number of items on the stack before an operation.
+	//If the stack has less items than minItems, throw an underflow_error
+	//exception. The exception will print a message stating the required
+	//number of items and the operation name.
+	void checkStackSize(const int minItems, const string& operationName);
+
 	//Debugging function that prints the contents of the symbol table.
 	void printSymTab();
 

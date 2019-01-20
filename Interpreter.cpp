@@ -153,6 +153,14 @@ bool Interpreter::isSymbol(const Token& t)
 	return symTab.find(t.text) != symTab.end();
 }
 
+void Interpreter::checkStackSize(const int minItems, const string & operationName)
+{
+	if (params.size() < minItems)
+	{
+		throw underflow_error("Error: Stack needs " + minItems + string(" items for ") + operationName + ".");
+	}
+}
+
 void Interpreter::printSymTab()
 {
 	map<string, Symbol>::iterator itr = symTab.begin();
@@ -195,10 +203,7 @@ void Interpreter::doDUMP(Interpreter *iptr)
 
 void Interpreter::doPlus(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for +.");
-	}
+	iptr->checkStackSize(2, "+");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -209,10 +214,7 @@ void Interpreter::doPlus(Interpreter *iptr)
 
 void Interpreter::doMinus(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for -.");
-	}
+	iptr->checkStackSize(2, "-");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -223,10 +225,7 @@ void Interpreter::doMinus(Interpreter *iptr)
 
 void Interpreter::doMultiply(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for *.");
-	}
+	iptr->checkStackSize(2, "*");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -237,24 +236,18 @@ void Interpreter::doMultiply(Interpreter *iptr)
 
 void Interpreter::doDivide(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for /.");
-	}
+	iptr->checkStackSize(2, "/");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
 
-	int results = t2.value / t1.value;
+	int results = t2.value / t1.value; //TODO: DIV BY ZERO?
 	iptr->params.push(Token(INTEGER, "", results));
 }
 
 void Interpreter::doMod(Interpreter * iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for %.");
-	}
+	iptr->checkStackSize(2, "%");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -265,10 +258,7 @@ void Interpreter::doMod(Interpreter * iptr)
 
 void Interpreter::doNEG(Interpreter * iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 item for NEG.");
-	}
+	iptr->checkStackSize(1, "NEG");
 
 	Token t = iptr->popStack();
 
@@ -288,10 +278,7 @@ void Interpreter::doNEG(Interpreter * iptr)
 
 void Interpreter::doDOT(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 item for .");
-	}
+	iptr->checkStackSize(1, ".");
 
 	Token t = iptr->popStack();
 
@@ -323,10 +310,7 @@ void Interpreter::doSP(Interpreter *iptr)
 
 void Interpreter::doDUP(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 item for DUP.");
-	}
+	iptr->checkStackSize(1, "DUP");
 
 	Token t = iptr->params.top();
 	iptr->params.push(t);
@@ -334,20 +318,14 @@ void Interpreter::doDUP(Interpreter *iptr)
 
 void Interpreter::doDROP(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 item for DROP.");
-	}
+	iptr->checkStackSize(1, "DROP");
 
 	iptr->popStack();
 }
 
 void Interpreter::doSWAP(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for SWAP.");
-	}
+	iptr->checkStackSize(2, "SWAP");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -358,10 +336,7 @@ void Interpreter::doSWAP(Interpreter *iptr)
 
 void Interpreter::doROT(Interpreter *iptr)
 {
-	if (iptr->params.size() < 3)
-	{
-		throw underflow_error("Error: Stack needs 3 items for ROT.");
-	}
+	iptr->checkStackSize(3, "ROT");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -383,10 +358,7 @@ void Interpreter::doROT(Interpreter *iptr)
 //ALSO, WHAT IS THE PURPOSE OF THE VARIABLE ENUM TYPE?
 void Interpreter::doSET(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for SET.");
-	}
+	iptr->checkStackSize(2, "SET");
 
 	Token varName = iptr->popStack();
 
@@ -412,10 +384,7 @@ void Interpreter::doSET(Interpreter *iptr)
 
 void Interpreter::doAt(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 items for @.");
-	}
+	iptr->checkStackSize(1, "@");
 
 	Token var = iptr->popStack();
 
@@ -432,10 +401,7 @@ void Interpreter::doAt(Interpreter *iptr)
 
 void Interpreter::doStore(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for !.");
-	}
+	iptr->checkStackSize(2, "!");
 
 	Token varName = iptr->popStack();
 	Token val = iptr->popStack();
@@ -460,10 +426,7 @@ void Interpreter::doStore(Interpreter *iptr)
 
 void Interpreter::doLessThan(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for <");
-	}
+	iptr->checkStackSize(2, "<");
 
 	//left right <
 	Token right = iptr->popStack();
@@ -475,10 +438,7 @@ void Interpreter::doLessThan(Interpreter *iptr)
 
 void Interpreter::doLessThanOrEqual(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for <=");
-	}
+	iptr->checkStackSize(2, "<=");
 
 	//left right <=
 	Token right = iptr->popStack();
@@ -490,10 +450,7 @@ void Interpreter::doLessThanOrEqual(Interpreter *iptr)
 
 void Interpreter::doEqualTo(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for ==");
-	}
+	iptr->checkStackSize(2, "==");
 
 	//left right ==
 	Token right = iptr->popStack();
@@ -505,10 +462,7 @@ void Interpreter::doEqualTo(Interpreter *iptr)
 
 void Interpreter::doNotEqual(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for !=");
-	}
+	iptr->checkStackSize(2, "!=");
 
 	//left right !=
 	Token right = iptr->popStack();
@@ -520,10 +474,7 @@ void Interpreter::doNotEqual(Interpreter *iptr)
 
 void Interpreter::doGreaterThanOrEqual(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for >=");
-	}
+	iptr->checkStackSize(2, ">=");
 
 	//left right >=
 	Token right = iptr->popStack();
@@ -535,10 +486,7 @@ void Interpreter::doGreaterThanOrEqual(Interpreter *iptr)
 
 void Interpreter::doGreaterThan(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for >");
-	}
+	iptr->checkStackSize(2, ">");
 
 	//left right >
 	Token right = iptr->popStack();
@@ -557,10 +505,7 @@ void Interpreter::doGreaterThan(Interpreter *iptr)
 
 void Interpreter::doAND(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for AND");
-	}
+	iptr->checkStackSize(2, "AND");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -571,10 +516,7 @@ void Interpreter::doAND(Interpreter *iptr)
 
 void Interpreter::doOR(Interpreter *iptr)
 {
-	if (iptr->params.size() < 2)
-	{
-		throw underflow_error("Error: Stack needs 2 items for OR");
-	}
+	iptr->checkStackSize(2, "OR");
 
 	Token t1 = iptr->popStack();
 	Token t2 = iptr->popStack();
@@ -585,10 +527,7 @@ void Interpreter::doOR(Interpreter *iptr)
 
 void Interpreter::doNOT(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 item for NOT");
-	}
+	iptr->checkStackSize(1, "NOT");
 
 	Token t = iptr->popStack();
 
@@ -604,10 +543,7 @@ void Interpreter::doNOT(Interpreter *iptr)
 
 void Interpreter::doIFTHEN(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw underflow_error("Error: Stack needs 1 item for IFTHEN");
-	}
+	iptr->checkStackSize(1, "IFTHEN");
 
 	Token p = iptr->popStack();
 
@@ -766,10 +702,7 @@ void Interpreter::doDO(Interpreter *iptr)
 
 void Interpreter::doUNTIL(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw out_of_range("Error: Stack needs 1 item for UNTIL");
-	}
+	iptr->checkStackSize(1, "UNTIL");
 
 	Token p = iptr->popStack();
 
@@ -793,10 +726,7 @@ void Interpreter::doUNTIL(Interpreter *iptr)
 
 void Interpreter::doDEFINE(Interpreter *iptr)
 {
-	if (iptr->params.size() < 1)
-	{
-		throw out_of_range("Error: Stack needs 1 item for DEFINE");
-	}
+	iptr->checkStackSize(1, "DEFINE");
 
 	Token function = iptr->popStack();
 
