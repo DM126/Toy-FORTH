@@ -1,0 +1,15 @@
+//Test
+
+printStars DEFINE
+	DO
+		."*" .
+
+END
+
+."Print how many lines?" . CR
+."> " . INPUT lines SET
+
+lines @ DO
+	."*" .
+	1 -
+DUP 0 == UNTIL DROP
