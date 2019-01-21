@@ -157,7 +157,8 @@ void Interpreter::checkStackSize(const int minItems, const string & operationNam
 {
 	if (params.size() < minItems)
 	{
-		throw underflow_error("Error: Stack needs " + minItems + string(" items for ") + operationName + ".");
+		string message = "Error: Stack needs " + to_string(minItems) + " items for " + operationName + ".";
+		throw underflow_error(message);
 	}
 }
 
