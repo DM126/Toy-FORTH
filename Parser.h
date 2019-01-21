@@ -26,6 +26,29 @@ private:
 	//Reads a string and determines the type of token or symbol it is.
 	Token readString(const string& str);
 
+	//Parses a line of text for a string literal beginning at the
+	//specified index. Called if the ." pattern is encountered.
+	//Returns the ending index within the line.
+	int readStringLiteral(const string& str, const int i);
+
+	//Returns true if a comment begins at the specified index of the line
+	bool isComment(const string& line, const int i) const;
+
+	//Returns true if the specified index is the beginning of a string literal (.")
+	bool isStringLiteral(const string& line, const int i) const;
+
+	//Returns true if the current character is a digit or a negative sign
+	//preceding a digit.
+	bool isStartOfInt(const string& line, const int i) const;
+
+	//Returns true if the character at index i of line is equal to char1 and
+	//the character at the index after i is equal to char2. Will return false
+	//if i is at the end of the line.
+	bool equalsTwoChars(const string& line, const int i, const char char1, const char char2) const;
+
+	//Returns true if the index is the last character on the line
+	bool isEndOfLine(const string& line, const int i) const;
+
 	//Symbol table
 	map<string, Symbol> symTab;
 
