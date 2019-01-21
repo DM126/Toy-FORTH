@@ -53,7 +53,7 @@ Interpreter::Interpreter(const string& fileName)
 	symTab["END"] = Symbol(nullptr);
 
 	symTab["RANDOM"] = Symbol(&doRANDOM);
-	srand(time(0));
+	srand((unsigned int)time(0));
 
 	symTab["INPUT"] = Symbol(&doINPUT);
 
@@ -104,17 +104,7 @@ void Interpreter::mainLoop()
 		cout << e.what() << endl;
 	}
 
-	//DEBUG? REMOVE?
-	cout << "\n----------------------------------------\n"
-		 << "End of program\n";
-	if (params.empty())
-	{
-		cout << "Stack parameter empty.\n";
-	}
-	else
-	{
-		cout << params.size() << " item(s) left on the stack.\n";
-	}
+	printEndInfo();
 
 	//deleteFunctions();
 }
@@ -153,7 +143,7 @@ bool Interpreter::isSymbol(const Token& t)
 	return symTab.find(t.text) != symTab.end();
 }
 
-void Interpreter::checkStackSize(const int minItems, const string & operationName)
+void Interpreter::checkStackSize(const unsigned int minItems, const string & operationName)
 {
 	if (params.size() < minItems)
 	{
@@ -179,6 +169,20 @@ void Interpreter::printTokenBuffer()
 	{
 		cout << *itr << endl;
 		itr++;
+	}
+}
+
+void Interpreter::printEndInfo()
+{
+	cout << "\n----------------------------------------\n"
+		<< "End of program\n";
+	if (params.empty())
+	{
+		cout << "Stack parameter empty.\n";
+	}
+	else
+	{
+		cout << params.size() << " item(s) left on the stack.\n";
 	}
 }
 

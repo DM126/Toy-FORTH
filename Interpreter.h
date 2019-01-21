@@ -15,7 +15,7 @@ public:
 	//Constructor for the interpreter.
 	//Argument is the name of the text file containing the FORTH code.
 	//Parses the text file, then calls mainLoop().
-	Interpreter(const string& fileName);
+	Interpreter(const std::string& fileName);
 
 private:
 	//The main execution of the interpreter.
@@ -38,7 +38,7 @@ private:
 	//If the stack has less items than minItems, throw an underflow_error
 	//exception. The exception will print a message stating the required
 	//number of items and the operation name.
-	void checkStackSize(const int minItems, const string& operationName);
+	void checkStackSize(const unsigned int minItems, const std::string& operationName);
 
 	//Debugging function that prints the contents of the symbol table.
 	void printSymTab();
@@ -46,23 +46,25 @@ private:
 	//Debugging function that prints the contents of tkBuffer.
 	void printTokenBuffer();
 
+	//Print the size of the stack at the end of execution.
+	void printEndInfo();
 
 	//map for symbols
 	//Holds information on all the keywords/operators, user-defined functions and variables
-	map<string, Symbol> symTab;
+	std::map<std::string, Symbol> symTab;
 
 	//parameter stack
 	//All tokens that are not keywords/operators are pushed onto
 	//the stack, including variables.
-	stack<Token> params;
+	std::stack<Token> params;
 
 	//List of tokens read by the parser.
 	//Every token encountered in the input file will be added to this list.
-	list<Token> tkBuffer;
+	std::list<Token> tkBuffer;
 
 	//Stack of Lists of tokens found within a loop, each list represents
 	//a nested loop, with the innermost loop being on the top of the stack.
-	stack<list<Token>> loopBuffers;
+	std::stack<std::list<Token>> loopBuffers;
 
 	//DEBUG: FOR TESTING PARSER
 	//stack<string> debugStack;

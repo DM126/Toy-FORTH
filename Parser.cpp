@@ -89,7 +89,7 @@ int Parser::readStringLiteral(const string& line, const int i)
 	int start = i + 2;
 
 	//find the location of the end quote
-	int end = start + 1;
+	unsigned int end = start + 1;
 	do
 	{
 		end++;
@@ -116,7 +116,7 @@ int Parser::readStringLiteral(const string& line, const int i)
 int Parser::readSingleToken(const string & line, const int i)
 {
 	int start = i;
-	int end = start + 1;
+	unsigned int end = start + 1;
 
 	//Check if the current char is a number or a negative sign preceding a number.
 	bool isInt = isStartOfInt(line, i);

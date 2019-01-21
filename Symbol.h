@@ -21,13 +21,13 @@ public:
 	Symbol(const int val);
 
 	//constructor for a user-defined function symbol
-	Symbol(list<Token> functionDef);
+	Symbol(std::list<Token> functionDef);
 
 	//constructor for a keyword/operator
 	Symbol(functionPointer fptr);
 
 	//Generic contructor
-	Symbol(Types type, const int val, list<Token> functionDef, functionPointer fptr);
+	Symbol(Types type, const int val, std::list<Token> functionDef, functionPointer fptr);
 
 	Types getType();
 
@@ -41,7 +41,7 @@ private:
 	int value;
 
 	//Pointer to a list of tokens encountered inside a function definition
-	list<Token> functionDef;
+	std::list<Token> functionDef;
 
 	//function pointer to the function executed when this symbol is read
 	functionPointer function;
