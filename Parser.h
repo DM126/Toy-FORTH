@@ -28,8 +28,16 @@ private:
 
 	//Parses a line of text for a string literal beginning at the
 	//specified index. Called if the ." pattern is encountered.
+	//Adds the string literal to the list of tokens.
 	//Returns the ending index within the line.
 	int readStringLiteral(const string& str, const int i);
+
+	//Parses a line of text for a single token, ending at the first discovered
+	//whitespace. This token could be an integer, variable, or a
+	//keyword/operator. (basically anything that isn't a string literal)
+	//Adds the token to the list of tokens.
+	//Returns the ending index within the line.
+	int readSingleToken(const string& line, const int i);
 
 	//Returns true if a comment begins at the specified index of the line
 	bool isComment(const string& line, const int i) const;

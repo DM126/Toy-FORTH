@@ -34,8 +34,6 @@ void Parser::parseLine(const string& line)
 	//TODO: Unsigned? is it necessary?
 	for (unsigned int i = 0; !endOfLine && i < line.length(); i++)
 	{
-		string encountered;
-
 		//read each character, ignoring whitespace
 		if (!isspace(line[i]))
 		{
@@ -54,32 +52,7 @@ void Parser::parseLine(const string& line)
 				}
 				else //Read a normal token
 				{
-					//Check if the current char is a number or a negative sign preceding a number.
-					bool isInt = isStartOfInt(line, i);
-
-					while (j < line.length() && !isspace(line[j]))
-					{
-						if (isInt)
-						{
-							//check if each char is a number.
-							isInt = isdigit(line[j]);
-						}
-						j++;
-					}
-
-					encountered = line.substr(i, j - i);
-
-					Token newToken;
-					if (isInt)
-					{
-						newToken = Token(INTEGER, "", stoi(encountered));
-					}
-					else
-					{
-						newToken = readString(encountered);
-					}
-
-					tokensRead.push_back(newToken);
+					j = readSingleToken(line, i);
 				}
 
 				//Skip over already read chars
@@ -136,6 +109,41 @@ int Parser::readStringLiteral(const string& line, const int i)
 	//{
 	//	
 	//}
+
+	return end;
+}
+
+int Parser::readSingleToken(const string & line, const int i)
+{
+	int start = i;
+	int end = start + 1;
+
+	//Check if the current char is a number or a negative sign preceding a number.
+	bool isInt = isStartOfInt(line, i);
+
+	while (end < line.length() && !isspace(line[end]))
+	{
+		if (isInt)
+		{
+			//check if each char is a number.
+			isInt = isdigit(line[end]);
+		}
+		end++;
+	}
+
+	string encountered = line.substr(start, end - start);
+
+	Token newToken;
+	if (isInt)
+	{
+		newToken = Token(INTEGER, "", stoi(encountered));
+	}
+	else
+	{
+		newToken = readString(encountered);
+	}
+
+	tokensRead.push_back(newToken);
 
 	return end;
 }
