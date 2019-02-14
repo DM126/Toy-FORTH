@@ -5,7 +5,10 @@ This was originally based on a class project for my Data Structures course. I re
 
 The entire language is implemented in postfix notation and utilizes a stack to execute statements. For example, the statement `5 4 +` will place 5 and 4 on the parameter stack, then execute the addition operation when the `+` is encountered, adding 5 and 4 together and placing 9 on the stack.  
 
-Any time a string literal, integer, or unknown token is encountered in the code, it will be pushed onto the parameter stack. Any time a keyword or operator is encountered, the operation associated with that keyword/operator will be executed. This will typically involve popping tokens from the parameter stack, performing an operation on them, and pushing the results of the operation onto the stack. Keywords, operators, variables, and functions are stored in a symbol table. Keyword and operator symbols will have a function pointer which gets called when the token for that symbol is read by the interpreter. 
+#### How the interpreter works:
+The parser reads every token in the code and determines what type of token they are. Each token is added to a list of tokens, known as the token buffer. The interpreter reads each token from this list and either adds it to the parameter stack or performs a specific operation.  
+
+Any time a string literal, integer, or unknown token is read from the token buffer, it will be pushed onto the parameter stack. Any time a keyword or operator is encountered, the operation associated with that keyword/operator will be executed. This will typically involve popping tokens from the parameter stack, performing an operation on them, and pushing the results of the operation onto the stack. Keywords, operators, variables, and functions are stored in a symbol table. Keyword and operator symbols will have a function pointer which gets called when the token for that symbol is read by the interpreter.  
 
 Here is an example hello world program in this language:  
 
@@ -58,7 +61,7 @@ Boolean values in this language work just like in C/C++, with 0 being false and 
 ### Function operators:  
 `DEFINE` defines the token on the top of the stack as an identifier for a function.  
 `END` ends the function definition.  
-Note that "functions" in this language are actually more like macros than functions, as they simply splice any tokens within the function body into the token buffer.  
+Note that "functions" in this language are actually more like macros than functions, as they simply splice any tokens within the function body into the token buffer. However, argument passing can be simulated with some clever stack operations.
 
 ### Other keywords:  
 `RANDOM` will push a random integer on to the stack. Uses the C++ rand() function.  
