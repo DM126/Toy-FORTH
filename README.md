@@ -1,11 +1,11 @@
 # Toy-FORTH
 Toy interpreter for a stack-based FORTH implementation
 
-This was originally based on a class project for my Data Structures course. I rewrote the entire parser and interpreter from scratch. For the project we were given a reverse-Polish notation calculator program with a working parser, and asked to implement the operators described below (`RANDOM`, `INPUT`, and the ability to define functions were not included in the class project specification, I added those features on my own).  
+This was originally based on a class project for my Data Structures course. I rewrote the entire parser and interpreter from scratch. For the project we were given a reverse-Polish notation calculator program with a working parser, and asked to implement the operators described below (`RANDOM`, `INPUT`, and the ability to define functions were not included in the class project specification, I came up with those features on my own).  
 
 The entire language is implemented in postfix notation and utilizes a stack to execute statements. For example, the statement `5 4 +` will place 5 and 4 on the parameter stack, then execute the addition operation when the `+` is encountered, adding 5 and 4 together and placing 9 on the stack.  
 
-Any time a string literal, integer, or unknown keyword are encountered in the code
+Any time a string literal, integer, or unknown token is encountered in the code, it will be pushed onto the parameter stack. Any time a keyword or operator is encountered, the operation associated with that keyword/operator will be executed. This will typically involve popping tokens from the parameter stack, performing an operation on them, and pushing the results of the operation onto the stack. Keywords, operators, variables, and functions are stored in a symbol table. Keyword and operator symbols will have a function pointer which gets called when the token for that symbol is read by the interpreter. 
 
 Here is an example hello world program in this language:  
 
