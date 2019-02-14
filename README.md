@@ -66,7 +66,10 @@ Note that "functions" in this language are actually more like macros than functi
 ### Other keywords:  
 `RANDOM` will push a random integer on to the stack. Uses the C++ rand() function.  
 `INPUT` will get user input using std::cin and push it onto the stack.  
+
+### Symbols recognized by the parser:
 `//` represents a comment, just as in C++.  
+`."` begins a string literal and `"` ends the string literal.  
 
 ## Example code  
 Here is an example program that prints the numbers 0 to 10:  
