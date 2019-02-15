@@ -48,14 +48,14 @@ Boolean values in this language work just like in C/C++, with 0 being false and 
 `OR` is the same as "||" in C++.  
 `NOT` is the same as "!" in C++.  
 
-### If statement operators:  
+### Conditional operators:  
 `IFTHEN` begins an if statement. Uses the value on top of the stack to determine whether to execute the if or else statement.  
 `ELSE` begins the else statement to be executed if the value checked by `IFTHEN` is false.  
 `ENDIF` ends an if statement. all `IFTHEN` tokens must have a corresponding `ENDIF`.  
 
 ### Loop operators:  
 `DO` begins a loop. Loops are executed one or more times.  
-`UNTIL` is the ending coniditional for a loop. If the value on the top of the stack is true, the loop will end.  
+`UNTIL` is the ending conditional for a loop. If the value on the top of the stack is true, the loop will end.  
 
 ### Function operators:  
 `DEFINE` defines the token on the top of the stack as an identifier for a function.  
