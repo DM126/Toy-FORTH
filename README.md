@@ -20,7 +20,6 @@ The `CR` operator represents a carriage return, and prints a newline.
 There are even more operators:  
 
 ### Arithmetic operations:  
-`DUMP` will print the entire contents of the parameter stack, and is used for debugging a program.  
 `+`, `-`, `*`, `/`, and `%` are the same arithmetic operators as in C++, only they use postfix notation.  
 `NEG` will multiply the item on top of the stack by -1.  
 
@@ -33,12 +32,12 @@ There are even more operators:
 `DUP` will duplicate the item on top of the stack.  
 `DROP` will discard the item on top of the stack.  
 `SWAP` will swap the positions of the top two items on the stack.  
-`ROT` will move the third item to the top of the stack.  
+`ROT` will move the third item to the top of the stack and push the top two items down.  
 
 ### Variable operations:  
 `SET` will initialize a variable using the item on top of the stack as an identifier and the next item as its value.  
 `@` is the "at" or "fetch" operator and is used to access a variable. It will place the value of the variable on the top of the stack.  
-`!` is the "store" operator and is used to set a variables value to the item on the top of the stack.  
+`!` is the "store" operator, and is used to set a variable's value to the item on the top of the stack.  
 
 ### Relational operators:  
 `<`, `<=`, `==`, `!=`, `>=`, and `>` all work the same as in C++, only using postfix notation.  
@@ -64,6 +63,7 @@ Boolean values in this language work just like in C/C++, with 0 being false and 
 Note that "functions" in this language are actually more like macros than functions, as they simply splice any tokens within the function body into the token buffer. However, argument passing can be simulated with some clever stack operations.
 
 ### Other keywords:  
+`DUMP` will print the entire contents of the parameter stack, and is used for debugging a program.  
 `RANDOM` will push a random integer on to the stack. Uses the C++ rand() function.  
 `INPUT` will get user input using std::cin and push it onto the stack.  
 
