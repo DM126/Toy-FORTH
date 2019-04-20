@@ -214,7 +214,7 @@ void Interpreter::doPlus(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 	
 	int results = t2.value + t1.value;
-	iptr->params.push(Token(INTEGER, "", results));
+	iptr->params.push(Token(results));
 }
 
 void Interpreter::doMinus(Interpreter *iptr)
@@ -225,7 +225,7 @@ void Interpreter::doMinus(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value - t1.value;
-	iptr->params.push(Token(INTEGER, "", results));
+	iptr->params.push(Token(results));
 }
 
 void Interpreter::doMultiply(Interpreter *iptr)
@@ -236,7 +236,7 @@ void Interpreter::doMultiply(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value * t1.value;
-	iptr->params.push(Token(INTEGER, "", results));
+	iptr->params.push(Token(results));
 }
 
 void Interpreter::doDivide(Interpreter *iptr)
@@ -247,7 +247,7 @@ void Interpreter::doDivide(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value / t1.value; //TODO: DIV BY ZERO?
-	iptr->params.push(Token(INTEGER, "", results));
+	iptr->params.push(Token(results));
 }
 
 void Interpreter::doMod(Interpreter * iptr)
@@ -258,7 +258,7 @@ void Interpreter::doMod(Interpreter * iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value % t1.value; //TODO: DIV BY ZERO?
-	iptr->params.push(Token(INTEGER, "", results));
+	iptr->params.push(Token(results));
 }
 
 void Interpreter::doNEG(Interpreter * iptr)
@@ -272,7 +272,7 @@ void Interpreter::doNEG(Interpreter * iptr)
 	//MAYBE KEEPING THESE FUNCTIONS CONSISTENT IS A GOOD IDEA? IDK... :/
 	//AND ANOTHER THING: I FEEL LIKE YOU DON'T NEED TO COPY THE POPPED TOKENS,
 	//JUST STORE THE VALUES YOU NEED AND WHO CARES ABOUT THE REST!!!
-	iptr->params.push(Token(INTEGER, "", -t.value));
+	iptr->params.push(Token(-t.value));
 }
 
 
@@ -396,7 +396,7 @@ void Interpreter::doAt(Interpreter *iptr)
 	//If the variable exists, place its value from the symbol table onto the stack.
 	if (iptr->isSymbol(var))
 	{
-		iptr->params.push(Token(INTEGER, "", iptr->symTab[var.text].value));
+		iptr->params.push(Token(iptr->symTab[var.text].value));
 	}
 	else
 	{
@@ -438,7 +438,7 @@ void Interpreter::doLessThan(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value < right.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doLessThanOrEqual(Interpreter *iptr)
@@ -450,7 +450,7 @@ void Interpreter::doLessThanOrEqual(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value <= right.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doEqualTo(Interpreter *iptr)
@@ -462,7 +462,7 @@ void Interpreter::doEqualTo(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value == right.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doNotEqual(Interpreter *iptr)
@@ -474,7 +474,7 @@ void Interpreter::doNotEqual(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value != right.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doGreaterThanOrEqual(Interpreter *iptr)
@@ -486,7 +486,7 @@ void Interpreter::doGreaterThanOrEqual(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value >= right.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doGreaterThan(Interpreter *iptr)
@@ -498,7 +498,7 @@ void Interpreter::doGreaterThan(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value > right.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 
@@ -516,7 +516,7 @@ void Interpreter::doAND(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	bool b = (t1.value && t2.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doOR(Interpreter *iptr)
@@ -527,7 +527,7 @@ void Interpreter::doOR(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	bool b = (t1.value || t2.value);
-	iptr->params.push(Token(INTEGER, "", b));
+	iptr->params.push(Token(b));
 }
 
 void Interpreter::doNOT(Interpreter *iptr)
@@ -536,7 +536,7 @@ void Interpreter::doNOT(Interpreter *iptr)
 
 	Token t = iptr->popStack();
 
-	iptr->params.push(Token(INTEGER, "", !t.value));
+	iptr->params.push(Token(!t.value));
 }
 
 
@@ -763,7 +763,7 @@ void Interpreter::doDEFINE(Interpreter *iptr)
 
 void Interpreter::doRANDOM(Interpreter * iptr)
 {
-	iptr->params.push(Token(INTEGER, "", rand()));
+	iptr->params.push(Token(rand()));
 }
 
 
@@ -775,5 +775,5 @@ void Interpreter::doINPUT(Interpreter * iptr)
 
 	cin >> input;
 
-	iptr->params.push(Token(INTEGER, "", input));
+	iptr->params.push(Token(input));
 }

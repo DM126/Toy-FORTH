@@ -16,8 +16,14 @@ class Token
 public:
 	Token();
 
-	//constructor
-	Token(Types type, const std::string& text, int value);
+	//Constructor for an unknown/variable token
+	Token(Types type, const std::string& text, const int value);
+
+	//constructor for a string literal token
+	Token(const std::string& text);
+
+	//constructor for an integer token
+	Token(const int value);
 
 	Types getType();
 	std::string getText();

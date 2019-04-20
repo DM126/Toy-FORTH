@@ -103,7 +103,8 @@ int Parser::readStringLiteral(const string& line, const int i)
 	{
 		//TODO: TEST THIS WHEN CLOSE TO END OF LINE:
 		//Create the substring starting after the (.") and before the (").
-		tokensRead.push_back(Token(LITERAL, line.substr(start, end - start), 0));
+		string text = line.substr(start, end - start);
+		tokensRead.push_back(Token(text));
 	}
 	//else //TODO: WHAT DO IF STRING DOESNT HAVE END QUOTES?
 	//{
@@ -136,7 +137,7 @@ int Parser::readSingleToken(const string & line, const int i)
 	Token newToken;
 	if (isInt)
 	{
-		newToken = Token(INTEGER, "", stoi(encountered));
+		newToken = Token(stoi(encountered));
 	}
 	else
 	{

@@ -15,6 +15,20 @@ Token::Token(Types type, const string& text, int value)
 	this->value = value;
 }
 
+Token::Token(const std::string & text)
+{
+	this->type = LITERAL;
+	this->text = text;
+	this->value = 0;
+}
+
+Token::Token(const int value)
+{
+	this->type = INTEGER;
+	this->text = "";
+	this->value = value;
+}
+
 Types Token::getType()
 {
 	return type;
