@@ -30,6 +30,7 @@ Interpreter::Interpreter(const string& fileName)
 	symTab["SET"] = Symbol(&doSET);
 	symTab["@"] = Symbol(&doAt);
 	symTab["!"] = Symbol(&doStore);
+	symTab["#"] = Symbol(&doAccess);
 
 	symTab["<"] = Symbol(&doLessThan);
 	symTab["<="] = Symbol(&doLessThanOrEqual);
@@ -420,6 +421,10 @@ void Interpreter::doStore(Interpreter *iptr)
 	{
 		cerr << "\nError: The variable \"" << varName.text << "\" does not exist.\n";
 	}
+}
+
+void Interpreter::doAccess(Interpreter * iptr)
+{
 }
 
 

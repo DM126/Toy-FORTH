@@ -174,6 +174,12 @@ private:
 	//If the variable does not exist, print an error message and move on.
 	static void doStore(Interpreter *iptr);
 
+	//"#" operator
+	//Accesses an index of an array and places that value on top of the stack
+	//Precondition: Stack must have at least 2 items
+	//If the the array does not exist, print an error message and move on
+	//If the index is out of bounds, print an error message and move on
+	static void doAccess(Interpreter *iptr);
 
 
 
