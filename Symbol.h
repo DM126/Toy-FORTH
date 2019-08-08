@@ -17,6 +17,12 @@ class Symbol
 public:
 	Symbol();
 
+	//Destructor for freeing arrays if allocated
+	~Symbol();
+
+	//TODO: copy constructor and overloaded assignment operator are unnecessary,
+	//		but could be implemented for good practice...
+
 	//constructor for a variable
 	Symbol(const int val);
 
@@ -26,18 +32,21 @@ public:
 	//constructor for a keyword/operator
 	Symbol(functionPointer fptr);
 
+	//constructor for an array symbol
+	Symbol(int* arr, const int size);
+
 	//Generic contructor
-	Symbol(Types type, const int val, std::list<Token> functionDef, functionPointer fptr);
+	Symbol(Types type, const int val, std::list<Token> functionDef, functionPointer fptr, int* arr);
 
 	Types getType();
 
 	int getValue();
 
 private:
-	//Determines if this symbol is a keyword/operator or a variable.
+	//Determines if this symbol is a keyword/operator, variable, or an array.
 	Types type;
 
-	//The value stored in this variable
+	//The value stored in this variable. For arrays, this represents the size of the array.
 	int value;
 
 	//Pointer to a list of tokens encountered inside a function definition
@@ -45,6 +54,9 @@ private:
 
 	//function pointer to the function executed when this symbol is read
 	functionPointer function;
+
+	//Pointer to an array
+	int* array;
 
 	friend Interpreter;
 };

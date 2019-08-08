@@ -16,7 +16,7 @@ class Token
 public:
 	Token();
 
-	//Constructor for an unknown/variable token
+	//Constructor for an unknown/variable/array token
 	Token(Types type, const std::string& text, const int value);
 
 	//constructor for a string literal token
@@ -24,9 +24,6 @@ public:
 
 	//constructor for an integer token
 	Token(const int value);
-
-	//constructor for an array token
-	Token(const std::string& name, const int size);
 
 	Types getType();
 	std::string getText();
@@ -42,7 +39,7 @@ private:
 	//the text this token was created with
 	std::string text;
 
-	//the value of this token
+	//the value of this token. Strings have a value of 0.
 	int value;
 
 	friend class Interpreter;

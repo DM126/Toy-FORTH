@@ -29,10 +29,6 @@ Token::Token(const int value)
 	this->value = value;
 }
 
-Token::Token(const std::string & name, const int size)
-{
-}
-
 Types Token::getType()
 {
 	return type;
