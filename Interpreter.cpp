@@ -30,7 +30,9 @@ Interpreter::Interpreter(const string& fileName)
 	symTab["SET"] = Symbol(&doSET);
 	symTab["@"] = Symbol(&doAt);
 	symTab["!"] = Symbol(&doStore);
-	symTab["#"] = Symbol(&doAccess);
+	symTab["ALLOT"] = Symbol(&doALLOT);
+	symTab["#@"] = Symbol(&doArrayAt);
+	symTab["#!"] = Symbol(&doArrayStore);
 
 	symTab["<"] = Symbol(&doLessThan);
 	symTab["<="] = Symbol(&doLessThanOrEqual);
@@ -419,12 +421,95 @@ void Interpreter::doStore(Interpreter *iptr)
 	}
 	else
 	{
-		cerr << "\nError: The variable \"" << varName.text << "\" does not exist.\n";
+		cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
 	}
 }
 
-void Interpreter::doAccess(Interpreter * iptr)
+void Interpreter::doALLOT(Interpreter *iptr)
 {
+	iptr->checkStackSize(2, "ALLOT");
+
+	//size arrayName ALLOT
+	Token arrayName = iptr->popStack();
+
+	//TODO: Create a custom exception type for this situation and catch that in the mainloop
+	//TODO: ADD THIS FOR ALL VARIABLE OPERATIONS?
+	if (arrayName.type == INTEGER)
+	{
+		throw invalid_argument("Cannot use an integer as an identifier.");
+	}
+
+	Token size = iptr->popStack();
+
+	//Validate array size is positive
+	if (size.value <= 0)
+	{
+		throw invalid_argument("Arrays must have a positive size.");
+	}
+
+	//If the array does not exist, create an array with that size.
+	if (!iptr->isSymbol(arrayName))
+	{
+		iptr->symTab[arrayName.text] = Symbol(new int[size.value], size.value);
+	}
+	else
+	{
+		cerr << "\nError: The array \"" << arrayName.text << "\" does not exist.\n";
+	}
+}
+
+void Interpreter::doArrayAt(Interpreter *iptr)
+{
+	iptr->checkStackSize(2, "#@");
+
+	//array index #@
+	Token index = iptr->popStack();
+	Token array = iptr->popStack();
+
+	//If the array exists and the index is valid, place its value from the
+	//symbol table onto the stack.
+	if (iptr->isSymbol(array))
+	{
+		if (index.value >= 0 && index.value < iptr->symTab[array.text].value)
+		{
+			iptr->params.push(Token(iptr->symTab[array.text].array[index.value]));
+		}
+		else
+		{
+			cerr << "\nError: Array index out of bounds: " << index.value << ".\n";
+		}
+	}
+	else
+	{
+		cerr << "\nError: The array \"" << array.text << "\" does not exist.\n";
+	}
+}
+
+void Interpreter::doArrayStore(Interpreter *iptr)
+{
+	iptr->checkStackSize(3, "#!");
+
+	//val array index #!
+	Token index = iptr->popStack();
+	Token array = iptr->popStack();
+	Token val = iptr->popStack();
+
+	//If the array exists and the index is valid, enter the value into the index
+	if (iptr->isSymbol(array))
+	{
+		if (index.value >= 0 && index.value < iptr->symTab[array.text].value)
+		{
+			iptr->symTab[array.text].array[index.value] = val.value;
+		}
+		else
+		{
+			cerr << "\nError: Array index out of bounds: " << index.value << ".\n";
+		}
+	}
+	else
+	{
+		cerr << "\nError: The array \"" << array.text << "\" does not exist.\n";
+	}
 }
 
 

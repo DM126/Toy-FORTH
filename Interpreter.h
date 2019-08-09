@@ -155,7 +155,7 @@ private:
 
 
 
-	//Variable operations:
+	//Variable/array operations:
 
 	//Initializes a variable and adds it to the symbol table.
 	//Precondition: stack must have at least 2 items.
@@ -174,13 +174,27 @@ private:
 	//If the variable does not exist, print an error message and move on.
 	static void doStore(Interpreter *iptr);
 
-	//"#" operator
+
+	//Allocates an int array of the specified size.
+	//Precondition: stack must have at least 2 items.
+	//Usage: '10 arr ALLOT' creates an array named arr with size 10.
+	static void doALLOT(Interpreter *iptr);
+
+	//"#@" operator
 	//Accesses an index of an array and places that value on top of the stack
-	//Precondition: Stack must have at least 2 items
+	//Precondition: stack must have at least 2 items.
+	//Usage: 'arr 4 #@' accesses index 4 of an array named arr.
 	//If the the array does not exist, print an error message and move on
 	//If the index is out of bounds, print an error message and move on
-	static void doAccess(Interpreter *iptr);
+	static void doArrayAt(Interpreter *iptr);
 
+	//"#!" operator
+	//Stores an int value at the specified index of an array.
+	//Precondition: stack must have at least 3 items.
+	//Usage: '25 arr 2 #!' stores the value 25 at index 2 of array 'arr'
+	//If the the array does not exist, print an error message and move on
+	//If the index is out of bounds, print an error message and move on
+	static void doArrayStore(Interpreter *iptr);
 
 
 
