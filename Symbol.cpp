@@ -16,7 +16,59 @@ Symbol::~Symbol()
 	if (array != nullptr)
 	{
 		delete[] array;
+		array = nullptr;
 	}
+}
+
+Symbol::Symbol(const Symbol& other)
+{
+	type = other.type;
+	value = other.value;
+	function = other.function;
+	functionDef = other.functionDef; //TODO Will this work?
+	if (other.type == ARRAY)
+	{
+		array = new int[other.value];
+		for (int i = 0; i < other.value; i++)
+		{
+			array[i] = other.array[i];
+		}
+	}
+	else
+	{
+		array = nullptr;
+	}
+}
+
+Symbol & Symbol::operator=(const Symbol& rhs)
+{
+	if (this != &rhs)
+	{
+		if (array != nullptr)
+		{
+			delete[] array;
+			array = nullptr;
+		}
+
+		type = rhs.type;
+		value = rhs.value;
+		function = rhs.function;
+		functionDef = rhs.functionDef; //TODO Will this work?
+		if (rhs.type == ARRAY)
+		{
+			array = new int[rhs.value];
+			for (int i = 0; i < rhs.value; i++)
+			{
+				array[i] = rhs.array[i];
+			}
+		}
+		else
+		{
+			array = nullptr;
+		}
+	}
+
+	return *this;
 }
 
 Symbol::Symbol(const int val)

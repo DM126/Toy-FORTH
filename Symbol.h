@@ -20,8 +20,8 @@ public:
 	//Destructor for freeing arrays if allocated
 	~Symbol();
 
-	//TODO: copy constructor and overloaded assignment operator are unnecessary,
-	//		but could be implemented for good practice...
+	Symbol(const Symbol& other);
+	Symbol& operator=(const Symbol& rhs);
 
 	//constructor for a variable
 	Symbol(const int val);

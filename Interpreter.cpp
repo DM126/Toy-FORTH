@@ -450,7 +450,8 @@ void Interpreter::doALLOT(Interpreter *iptr)
 	//If the array does not exist, create an array with that size.
 	if (!iptr->isSymbol(arrayName))
 	{
-		iptr->symTab[arrayName.text] = Symbol(new int[size.value], size.value);
+		int* arr = new int[size.value];
+		iptr->symTab[arrayName.text] = Symbol(arr, size.value);
 	}
 	else
 	{
