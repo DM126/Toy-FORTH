@@ -5,10 +5,10 @@
 #include <ostream>
 
 //Types of tokens
-enum Types { KEYWORD, VARIABLE, LITERAL, INTEGER, FUNCTION, UNKNOWN };
+enum Types { KEYWORD, VARIABLE, LITERAL, INTEGER, ARRAY, FUNCTION, UNKNOWN };
 
 //for debugging
-const std::string typeArray[] = { "KEYWORD", "VARIABLE", "LITERAL", "INTEGER", "FUNCTION", "UNKNOWN" };
+const std::string typeArray[] = { "KEYWORD", "VARIABLE", "LITERAL", "INTEGER", "ARRAY", "FUNCTION", "UNKNOWN" };
 
 //Tokens represent every item encountered in the input file.
 class Token
@@ -16,7 +16,7 @@ class Token
 public:
 	Token();
 
-	//Constructor for an unknown/variable token
+	//Constructor for an unknown/variable/array token
 	Token(Types type, const std::string& text, const int value);
 
 	//constructor for a string literal token
@@ -39,7 +39,7 @@ private:
 	//the text this token was created with
 	std::string text;
 
-	//the value of this token
+	//the value of this token. Strings have a value of 0.
 	int value;
 
 	friend class Interpreter;
