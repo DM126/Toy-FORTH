@@ -102,6 +102,12 @@ Symbol::Symbol(int * arr, const int size)
 	value = size;
 	function = nullptr;
 	array = arr;
+
+	//Initialize all array elements to 0.
+	for (int i = 0; i < size; i++)
+	{
+		array[i] = 0;
+	}
 }
 
 Symbol::Symbol(Types type, const int val, list<Token> functionDef, functionPointer fptr, int* arr)
