@@ -59,12 +59,19 @@ Interpreter::Interpreter(const string& fileName)
 	srand((unsigned int)time(0));
 
 	symTab["INPUT"] = Symbol(&doINPUT);
+	
+	try
+	{
+		Parser parser(fileName, symTab);
+		tkBuffer = parser.getTokens();
+		//printTokenBuffer();
 
-	Parser parser(fileName, symTab);
-	tkBuffer = parser.getTokens();
-	//printTokenBuffer();
-
-	mainLoop();
+		mainLoop();
+	}
+	catch (runtime_error& e) //If file name is incorrect (TODO: Custom exception?)
+	{
+		cout << e.what() << endl;
+	}
 }
 
 void Interpreter::mainLoop()

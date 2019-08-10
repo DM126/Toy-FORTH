@@ -8,7 +8,14 @@ Parser::Parser(const string& fileName, const map<string, Symbol>& symbolTable)
 	symTab = symbolTable;
 
 	ifstream infile(fileName);
-	readInput(infile);
+	if (infile.fail())
+	{
+		throw runtime_error("Error: Could not find file: " + fileName);
+	}
+	else
+	{
+		readInput(infile);
+	}
 }
 
 list<Token> Parser::getTokens()
@@ -19,7 +26,7 @@ list<Token> Parser::getTokens()
 void Parser::readInput(ifstream& infile)
 {
 	string line;
-	//TODO: Check for failure to open?
+	
 	while (!infile.eof())
 	{
 		getline(infile, line);
