@@ -68,9 +68,9 @@ Boolean values in this language work just like in C/C++, with 0 being false and 
 `END` ends the function definition.  
 Note that "functions" in this language are actually more like macros than functions, as they simply splice any tokens within the function body into the token buffer. However, argument passing can be simulated with some clever stack operations.
 
-### File reading operations:
-`OPEN` will open a text file for reading using the item on top of the stack as the file name.
-`READ` will read a single character from the open file and place its ASCII value onto the stack.
+### File reading operations:  
+`OPEN` will open a text file for reading using the item on top of the stack as the file name.  
+`READ` will read a single character from the open file and place its ASCII value onto the stack.  
 
 ### Other keywords:  
 `DUMP` will print the entire contents of the parameter stack, and is used for debugging a program.  
