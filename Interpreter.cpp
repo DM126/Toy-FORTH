@@ -59,6 +59,9 @@ Interpreter::Interpreter(const string& fileName)
 	srand((unsigned int)time(0));
 
 	symTab["INPUT"] = Symbol(&doINPUT);
+
+	symTab["OPEN"] = Symbol(&doOPEN);
+	symTab["READ"] = Symbol(&doREAD);
 	
 	try
 	{
@@ -866,6 +869,8 @@ void Interpreter::doRANDOM(Interpreter * iptr)
 
 
 
+
+
 void Interpreter::doINPUT(Interpreter * iptr)
 {
 	//TODO: WHAT ABOUT STRINGS????
@@ -874,4 +879,44 @@ void Interpreter::doINPUT(Interpreter * iptr)
 	cin >> input;
 
 	iptr->params.push(Token(input));
+}
+
+
+
+
+
+
+void Interpreter::doOPEN(Interpreter * iptr)
+{
+	iptr->checkStackSize(1, "OPEN");
+
+	Token filename = iptr->popStack();
+
+	//TODO: Should these errors stop execution?
+	if (filename.type == LITERAL)
+	{
+		iptr->file = ifstream(filename.text);
+		if (iptr->file.fail())
+		{
+			cerr << "Error: Could not open file: " << filename.text << "\n";
+		}
+	}
+	else
+	{
+		cerr << "ERROR: File name must be a string.\n";
+	}
+}
+
+void Interpreter::doREAD(Interpreter * iptr)
+{
+	//TODO: Should failing this stop execution?
+	if (iptr->file.is_open())
+	{
+		//TODO: Check for EOF
+		iptr->params.push(Token(iptr->file.get()));
+	}
+	else
+	{
+		cerr << "Error: no file is currently open.\n";
+	}
 }

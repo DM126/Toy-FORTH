@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <fstream>
 #include "Symbol.h"
 
 class Interpreter
@@ -65,6 +66,9 @@ private:
 	//Stack of Lists of tokens found within a loop, each list represents
 	//a nested loop, with the innermost loop being on the top of the stack.
 	std::stack<std::list<Token>> loopBuffers;
+
+	//File opened with the OPEN keyword and read with the READ keyword.
+	std::ifstream file;
 
 	//DEBUG: FOR TESTING PARSER
 	//stack<string> debugStack;
@@ -270,9 +274,27 @@ private:
 	static void doRANDOM(Interpreter *iptr);
 
 
+
+
 	//Get user input:
 	//Gets integer input from the user and places it on the parameter stack.
 	static void doINPUT(Interpreter *iptr);
+
+
+
+
+	//File I/O:
+
+	//Opens a file for reading.
+	//Precondition: The parameter stack must have at least 1 item, which should 
+	//be a string literal.
+	static void doOPEN(Interpreter *iptr);
+
+	//Reads a single char from an open file as an ASCII value.
+	//Precondition: a file must be open.
+	//Places the char from the file onto the parameter stack as in int using its 
+	//ASCII value.
+	static void doREAD(Interpreter *iptr);
 };
 
 #endif // !INTERPRETER_H
