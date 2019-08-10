@@ -21,6 +21,7 @@ Interpreter::Interpreter(const string& fileName)
 	symTab["."] = Symbol(&doDOT);
 	symTab["CR"] = Symbol(&doCR);
 	symTab["SP"] = Symbol(&doSP);
+	symTab["EMIT"] = Symbol(&doEMIT);
 
 	symTab["DUP"] = Symbol(&doDUP);
 	symTab["DROP"] = Symbol(&doDROP);
@@ -318,6 +319,17 @@ void Interpreter::doCR(Interpreter *iptr)
 void Interpreter::doSP(Interpreter *iptr)
 {
 	cout << " ";
+}
+
+void Interpreter::doEMIT(Interpreter * iptr)
+{
+	iptr->checkStackSize(1, "EMIT");
+
+	Token t = iptr->popStack();
+
+	//TODO: Only allow integer types for EMIT?
+	char ch = t.value;
+	cout << ch;
 }
 
 

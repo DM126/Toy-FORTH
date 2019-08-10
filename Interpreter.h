@@ -130,7 +130,9 @@ private:
 	//Prints a space.
 	static void doSP(Interpreter *iptr);
 
-
+	//Prints the value on top of the stack as a char.
+	//Precondition: stack must have at least 1 item.
+	static void doEMIT(Interpreter *iptr);
 
 
 
