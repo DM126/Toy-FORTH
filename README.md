@@ -27,6 +27,7 @@ There are even more operators:
 `.` will print the item on top of the parameter stack.  
 `CR` will print a new line.  
 `SP` will print a space.  
+`EMIT` will print an int as a char using its ASCII value.
 
 ### Stack operations:  
 `DUP` will duplicate the item on top of the stack.  
@@ -66,6 +67,10 @@ Boolean values in this language work just like in C/C++, with 0 being false and 
 `DEFINE` defines the token on the top of the stack as an identifier for a function.  
 `END` ends the function definition.  
 Note that "functions" in this language are actually more like macros than functions, as they simply splice any tokens within the function body into the token buffer. However, argument passing can be simulated with some clever stack operations.
+
+### File reading operations:  
+`OPEN` will open a text file for reading using the item on top of the stack as the file name.  
+`READ` will read a single character from the open file and place its ASCII value onto the stack.  
 
 ### Other keywords:  
 `DUMP` will print the entire contents of the parameter stack, and is used for debugging a program.  
