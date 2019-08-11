@@ -1,4 +1,5 @@
 #include <list>
+#include <algorithm>
 #include "Symbol.h"
 
 using namespace std;
@@ -127,4 +128,20 @@ Types Symbol::getType()
 int Symbol::getValue()
 {
 	return value;
+}
+
+void Symbol::reallocate(const int newSize)
+{
+	int* newArray = new int[newSize];
+	if (array != nullptr)
+	{
+		int smallerSize = min(value, newSize);
+		for (int i = 0; i < smallerSize; i++)
+		{
+			newArray[i] = array[i];
+		}
+		delete[] array;
+		array = newArray;
+		value = newSize;
+	}
 }

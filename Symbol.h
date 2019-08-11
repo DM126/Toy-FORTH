@@ -42,6 +42,11 @@ public:
 
 	int getValue();
 
+	//Reallocates space for an array after if ALLOT is called again. Keeps items
+	//already in the array (as long as they don't get truncated with a smaller
+	//size).
+	void reallocate(const int newSize);
+
 private:
 	//Determines if this symbol is a keyword/operator, variable, or an array.
 	Types type;
