@@ -477,7 +477,7 @@ void Interpreter::doALLOT(Interpreter *iptr)
 	}
 	else
 	{
-		cerr << "\nError: The array \"" << arrayName.text << "\" does not exist.\n";
+		cerr << "\nError: The array \"" << arrayName.text << "\" already exists.\n";
 	}
 }
 
