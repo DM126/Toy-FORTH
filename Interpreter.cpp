@@ -477,7 +477,7 @@ void Interpreter::doALLOT(Interpreter *iptr)
 	}
 	else
 	{
-		cerr << "\nError: The array \"" << arrayName.text << "\" already exists.\n";
+		iptr->symTab[arrayName.text].reallocate(size.value);
 	}
 }
 
