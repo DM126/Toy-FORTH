@@ -132,9 +132,9 @@ int Symbol::getValue()
 
 void Symbol::reallocate(const int newSize)
 {
-	int* newArray = new int[newSize];
 	if (array != nullptr)
 	{
+		int* newArray = new int[newSize];
 		int smallerSize = min(value, newSize);
 		for (int i = 0; i < smallerSize; i++)
 		{
