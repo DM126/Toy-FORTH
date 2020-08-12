@@ -1,3 +1,7 @@
+obj/*
+*.out
+
+#Visual Studio files
 Debug/
 *.vcxproj
 *.vcxproj.*

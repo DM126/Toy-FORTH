@@ -3,8 +3,7 @@
 
 int main()
 {
-	Interpreter forth("test.txt");
+	Interpreter forth("examples/test.txt");
 
-	system("pause");
 	return 0;
 }
