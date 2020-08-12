@@ -10,12 +10,10 @@ Parser::Parser(const string& fileName, const map<string, Symbol>& symbolTable)
 	ifstream infile(fileName);
 	if (infile.fail())
 	{
-		throw runtime_error("Error: Could not find file: " + fileName);
+		throw runtime_error("Error: Could not find file \"" + fileName + "\"");
 	}
-	else
-	{
-		readInput(infile);
-	}
+	
+	readInput(infile);
 }
 
 list<Token> Parser::getTokens()

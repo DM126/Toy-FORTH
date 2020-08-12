@@ -66,7 +66,7 @@ Interpreter::Interpreter(const string& fileName)
 	
 	try
 	{
-		Parser parser(fileName, symTab);
+		Parser parser(fileName, symTab); //TODO look for file first?
 		tkBuffer = parser.getTokens();
 		//printTokenBuffer();
 
