@@ -41,7 +41,7 @@ There are even more operators:
 `!` is the "store" operator, and is used to set a variable's value to the item on the top of the stack.  
 
 ### Array operations:
-`ALLOT` is used to allocate an array of ints. `10 arr ALLOT` will create an array called 'arr' of size 10. Using `ALLOT` on an array that already exists will reallocate the array with its original elements (will truncate elements if the new size is smaller). 
+`ALLOT` is used to allocate an array of ints. `10 arr ALLOT` will create an array called 'arr' of size 10. Using `ALLOT` on an array that already exists will reallocate the array with its original elements (will truncate elements if the new size is smaller).  
 `#@` returns the value at an array's index. `arr 3 #@` places the value at index 3 of array 'arr' onto the stack.  
 `#!` stores a value into an array index. `12 arr 4 #!` stores the value 12 at index 4 of array 'arr'.  
 
