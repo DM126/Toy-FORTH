@@ -35,7 +35,6 @@ void Parser::parseLine(const std::string& line)
 {
 	bool endOfLine = false;
 
-	//TODO: Unsigned? is it necessary?
 	for (unsigned int i = 0; !endOfLine && i < line.length(); i++)
 	{
 		//read each character, ignoring whitespace
@@ -87,7 +86,7 @@ Token Parser::readString(const std::string& str)
 	return t;
 }
 
-int Parser::readStringLiteral(const std::string& line, const int i)
+int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 {
 	std::stringstream ss;
 
@@ -150,9 +149,9 @@ int Parser::readStringLiteral(const std::string& line, const int i)
 	return end;
 }
 
-int Parser::readSingleToken(const std::string & line, const int i)
+int Parser::readSingleToken(const std::string & line, const unsigned int i)
 {
-	int start = i;
+	unsigned int start = i;
 	unsigned int end = start + 1;
 
 	//Check if the current char is a number or a negative sign preceding a number.
@@ -185,27 +184,27 @@ int Parser::readSingleToken(const std::string & line, const int i)
 	return end;
 }
 
-bool Parser::isComment(const std::string& line, const int i) const
+bool Parser::isComment(const std::string& line, const unsigned int i) const
 {
 	return equalsTwoChars(line, i, '/', '/');
 }
 
-bool Parser::isStringLiteral(const std::string& line, const int i) const
+bool Parser::isStringLiteral(const std::string& line, const unsigned int i) const
 {
 	return equalsTwoChars(line, i, '.', '\"');
 }
 
-bool Parser::isStartOfInt(const std::string& line, const int i) const
+bool Parser::isStartOfInt(const std::string& line, const unsigned int i) const
 {
 	return std::isdigit(line[i]) || (line[i] == '-' && !isEndOfLine(line, i) && std::isdigit(line[i + 1]));
 }
 
-bool Parser::equalsTwoChars(const std::string& line, const int i, const char char1, const char char2) const
+bool Parser::equalsTwoChars(const std::string& line, const unsigned int i, const char char1, const char char2) const
 {
 	return (line[i] == char1) && !isEndOfLine(line, i) && (line[i + 1] == char2);
 }
 
-bool Parser::isEndOfLine(const std::string& line, const int i) const
+bool Parser::isEndOfLine(const std::string& line, const unsigned int i) const
 {
 	return i == line.length() - 1;
 }
