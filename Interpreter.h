@@ -61,7 +61,7 @@ private:
 
 	//List of tokens read by the parser.
 	//Every token encountered in the input file will be added to this list.
-	std::list<Token> tkBuffer;
+	std::list<Token> tokenBuffer;
 
 	//Stack of Lists of tokens found within a loop, each list represents
 	//a nested loop, with the innermost loop being on the top of the stack.

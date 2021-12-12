@@ -65,7 +65,7 @@ Interpreter::Interpreter(const std::string& fileName)
 	try
 	{
 		Parser parser(fileName, symTab); //TODO look for file first?
-		tkBuffer = parser.getTokens();
+		tokenBuffer = parser.getTokens();
 		//printTokenBuffer();
 
 		mainLoop();
@@ -82,7 +82,7 @@ void Interpreter::mainLoop()
 
 	try
 	{
-		while (!tkBuffer.empty())
+		while (!tokenBuffer.empty())
 		{
 			next = nextToken();
 
@@ -98,7 +98,7 @@ void Interpreter::mainLoop()
 			{
 				//Add all the tokens from the function definition to the token buffer
 				std::list<Token> copy = symTab[next.text].functionDef;
-				tkBuffer.splice(tkBuffer.begin(), copy);
+				tokenBuffer.splice(tokenBuffer.begin(), copy);
 			}
 			else
 			{
@@ -123,8 +123,8 @@ void Interpreter::mainLoop()
 
 Token Interpreter::nextToken()
 {
-	Token t = tkBuffer.front();
-	tkBuffer.pop_front();
+	Token t = tokenBuffer.front();
+	tokenBuffer.pop_front();
 
 	return t;
 }
@@ -176,8 +176,8 @@ void Interpreter::printSymTab()
 
 void Interpreter::printTokenBuffer()
 {
-	std::list<Token>::iterator itr = tkBuffer.begin();
-	while (itr != tkBuffer.end())
+	std::list<Token>::iterator itr = tokenBuffer.begin();
+	while (itr != tokenBuffer.end())
 	{
 		std::cout << *itr << std::endl;
 		itr++;
@@ -733,8 +733,8 @@ void Interpreter::doIFTHEN(Interpreter *iptr)
 		}
 		while (!foundEnd);
 
-		//Add everything found between IFTHEN and ELSE to tkBuffer
-		iptr->tkBuffer.splice(iptr->tkBuffer.begin(), ifBuffer);
+		//Add everything found between IFTHEN and ELSE to tokenBuffer
+		iptr->tokenBuffer.splice(iptr->tokenBuffer.begin(), ifBuffer);
 	}
 	else //if the value was false, skip over the tokens inside the if part.
 	{
@@ -813,7 +813,7 @@ void Interpreter::doDO(Interpreter *iptr)
 	//onto the stack of lists
 	std::list<Token> copy = buffer;
 	iptr->loopBuffers.push(buffer);
-	iptr->tkBuffer.splice(iptr->tkBuffer.begin(), copy);
+	iptr->tokenBuffer.splice(iptr->tokenBuffer.begin(), copy);
 }
 
 void Interpreter::doUNTIL(Interpreter *iptr)
@@ -827,7 +827,7 @@ void Interpreter::doUNTIL(Interpreter *iptr)
 	if (!p.value)
 	{
 		std::list<Token> copy = iptr->loopBuffers.top();
-		iptr->tkBuffer.splice(iptr->tkBuffer.begin(), copy);
+		iptr->tokenBuffer.splice(iptr->tokenBuffer.begin(), copy);
 	}
 	else
 	{
