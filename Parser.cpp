@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 #include "Parser.h"
 
 Parser::Parser(const std::string& fileName, const std::map<std::string, Symbol>& symbolTable)
@@ -88,13 +89,44 @@ Token Parser::readString(const std::string& str)
 
 int Parser::readStringLiteral(const std::string& line, const int i)
 {
+	std::stringstream ss;
+
 	//skip over the (.").
 	int start = i + 2;
 
-	//find the location of the end quote
+	//TODO refactor this
+	//find the location of the end quote (escaped quotes are allowed)
 	unsigned int end = start;
-	while (end < line.length() && line[end] != '\"')
+	bool escaped = false;
+	while (end < line.length() && !(line[end] == '\"' && !escaped))
 	{
+		char currentChar = line[end];
+
+		//Check if beginning an escape character
+		if (!escaped && currentChar == '\\')
+		{
+			escaped = true;
+		}
+		else
+		{
+			//Add the character or an escape character
+			if (escaped)
+			{
+				switch (currentChar)
+				{
+					case '\"':
+					case '\\': ss << currentChar; break;
+					default: throw std::runtime_error("Error: '" + std::string(1, currentChar) + "' is not an escape character");
+				}
+			}
+			else
+			{
+				ss << currentChar;
+			}
+
+			escaped = false;
+		}
+
 		end++;
 	}
 
@@ -105,7 +137,8 @@ int Parser::readStringLiteral(const std::string& line, const int i)
 	{
 		//TODO: TEST THIS WHEN CLOSE TO END OF LINE:
 		//Create the substring starting after the (.") and before the (").
-		std::string text = line.substr(start, end - start);
+		// std::string text = line.substr(start, end - start);
+		std::string text = ss.str();
 		tokensRead.push_back(Token(text));
 	}
 	//else //TODO: WHAT DO IF STRING DOESNT HAVE END QUOTES?
