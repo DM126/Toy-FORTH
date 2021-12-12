@@ -9,7 +9,7 @@ Parser::Parser(const std::string& fileName, const std::map<std::string, Symbol>&
 	std::ifstream infile(fileName);
 	if (infile.fail())
 	{
-		throw std::runtime_error("Error: Could not find file \"" + fileName + "\"");
+		throw std::runtime_error("Parser error: Could not find file \"" + fileName + "\"");
 	}
 	
 	readInput(infile);
@@ -73,7 +73,6 @@ Token Parser::readString(const std::string& str)
 	//TODO: FIND FUNCTIONS BEFORE RUN-TIME?
 
 	//Check the symbol table
-	//map<string, Symbol>::iterator it = symTab.find(str);
 	if (symTab.find(str) != symTab.end())
 	{
 		t = Token(symTab[str].getType(), str, symTab[str].getValue());
@@ -115,7 +114,7 @@ int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 				{
 					case '\"':
 					case '\\': ss << currentChar; break;
-					default: throw std::runtime_error("Error: '" + std::string(1, currentChar) + "' is not an escape character");
+					default: throw std::runtime_error("Parser error: '" + std::string(1, currentChar) + "' is not an escape character");
 				}
 			}
 			else
@@ -134,7 +133,7 @@ int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 		//String literals must be followed by whitespace
 		if (end + 1 < line.length() && !std::isspace(line[end + 1]))
 		{
-			throw std::runtime_error("Error: string literals can only be immediately followed by whitespace");
+			throw std::runtime_error("Parser error: string literals can only be immediately followed by whitespace");
 		}
 
 		//Create the string starting after the (.") and before the (").
@@ -143,7 +142,7 @@ int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 	}
 	else
 	{
-		throw std::runtime_error("Error: String literal not closed");
+		throw std::runtime_error("Parser error: String literal not closed");
 	}
 
 	return end;
@@ -172,7 +171,14 @@ int Parser::readSingleToken(const std::string & line, const unsigned int i)
 	Token newToken;
 	if (isInt)
 	{
-		newToken = Token(stoi(encountered));
+		try
+		{
+			newToken = Token(stoi(encountered));
+		}
+		catch (std::out_of_range)
+		{
+			throw std::runtime_error("Parser error: int value " + encountered + " is too large");
+		}
 	}
 	else
 	{
