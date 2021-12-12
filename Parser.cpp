@@ -38,7 +38,7 @@ void Parser::parseLine(const std::string& line)
 	for (unsigned int i = 0; !endOfLine && i < line.length(); i++)
 	{
 		//read each character, ignoring whitespace
-		if (!isspace(line[i]))
+		if (!std::isspace(line[i]))
 		{
 			if (isComment(line, i))
 			{
@@ -92,12 +92,11 @@ int Parser::readStringLiteral(const std::string& line, const int i)
 	int start = i + 2;
 
 	//find the location of the end quote
-	unsigned int end = start + 1;
-	do
+	unsigned int end = start;
+	while (end < line.length() && line[end] != '\"')
 	{
 		end++;
 	}
-	while (end < line.length() && line[end] != '\"');
 
 	//TODO: WHAT IF THERE IS A CHAR IMMEDIATELY AFTER THE ENDQUOTE? MAKE IT UNKNOWN? IDK...
 	//YOU'D PROBABLY HAVE TO RE-READ ALL THE WHITESPACE AND REDO EVERYTHING IDK...
@@ -164,7 +163,7 @@ bool Parser::isStringLiteral(const std::string& line, const int i) const
 
 bool Parser::isStartOfInt(const std::string& line, const int i) const
 {
-	return isdigit(line[i]) || (line[i] == '-' && !isEndOfLine(line, i) && isdigit(line[i + 1]));
+	return std::isdigit(line[i]) || (line[i] == '-' && !isEndOfLine(line, i) && std::isdigit(line[i + 1]));
 }
 
 bool Parser::equalsTwoChars(const std::string& line, const int i, const char char1, const char char2) const
