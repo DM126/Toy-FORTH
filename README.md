@@ -21,6 +21,7 @@ There are even more operators:
 
 ### Arithmetic operations:  
 `+`, `-`, `*`, `/`, and `%` are the same arithmetic operators as in C++, only they use postfix notation.  
+Operations where the order of the operands matters might be a bit confusing when using postfix notation, but you just put the operator between them. So `x y /`, `x y %`, and `x y -` in postfix are equivalent to `x / y`, `x % y`, `x - y` in the standard infix notation.  
 `NEG` will multiply the item on top of the stack by -1.  
 
 ### Printing operations:  
