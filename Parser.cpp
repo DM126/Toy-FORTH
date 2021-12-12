@@ -130,21 +130,22 @@ int Parser::readStringLiteral(const std::string& line, const int i)
 		end++;
 	}
 
-	//TODO: WHAT IF THERE IS A CHAR IMMEDIATELY AFTER THE ENDQUOTE? MAKE IT UNKNOWN? IDK...
-	//YOU'D PROBABLY HAVE TO RE-READ ALL THE WHITESPACE AND REDO EVERYTHING IDK...
-	//YOU'D PROBABLY HAVE TO RESET THE i VALUE TO ITS ORIGINAL, IN THAT CASE JUST NEVER CHANGE IT???
 	if (line[end] == '\"')
 	{
-		//TODO: TEST THIS WHEN CLOSE TO END OF LINE:
-		//Create the substring starting after the (.") and before the (").
-		// std::string text = line.substr(start, end - start);
+		//String literals must be followed by whitespace
+		if (end + 1 < line.length() && !std::isspace(line[end + 1]))
+		{
+			throw std::runtime_error("Error: string literals can only be immediately followed by whitespace");
+		}
+
+		//Create the string starting after the (.") and before the (").
 		std::string text = ss.str();
 		tokensRead.push_back(Token(text));
 	}
-	//else //TODO: WHAT DO IF STRING DOESNT HAVE END QUOTES?
-	//{
-	//	
-	//}
+	else
+	{
+		throw std::runtime_error("Error: String literal not closed");
+	}
 
 	return end;
 }
