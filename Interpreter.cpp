@@ -382,6 +382,16 @@ void Interpreter::doROT(Interpreter *iptr)
 
 //Variable operations
 
+//Validates that a variable operation is using a valid identifier.
+void validateIdentifier(Token token)
+{
+	//TODO: Create a custom exception type for this situation and catch that in the mainloop
+	if (token.getType() == INTEGER)
+	{
+		throw std::invalid_argument("Error: cannot use an integer (" + std::to_string(token.getValue()) + ") as an identifier.");
+	}
+}
+
 //TODO: HOW DO THE PARSER AND SYMTAB DIFFERENTIATE BETWEEN SYMBOLS AND VARIABLES?
 //ALSO, WHAT IS THE PURPOSE OF THE VARIABLE ENUM TYPE?
 void Interpreter::doSET(Interpreter *iptr)
@@ -389,13 +399,7 @@ void Interpreter::doSET(Interpreter *iptr)
 	iptr->checkStackSize(2, "SET");
 
 	Token varName = iptr->popStack();
-
-	//TODO: Create a custom exception type for this situation and catch that in the mainloop
-	//TODO: ADD THIS FOR ALL VARIABLE OPERATIONS?
-	if (varName.type == INTEGER)
-	{
-		throw std::invalid_argument("Cannot use an integer as an identifier.");
-	}
+	validateIdentifier(varName);
 	
 	Token val = iptr->popStack();
 
@@ -406,7 +410,7 @@ void Interpreter::doSET(Interpreter *iptr)
 	}
 	else
 	{
-		std::cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
+		std::cerr << "\nError: Cannot perform 'SET': The variable \"" << varName.text << "\" already exists.\n";
 	}
 }
 
@@ -415,6 +419,7 @@ void Interpreter::doAt(Interpreter *iptr)
 	iptr->checkStackSize(1, "@");
 
 	Token var = iptr->popStack();
+	validateIdentifier(var);
 
 	//If the variable exists, place its value from the symbol table onto the stack.
 	if (iptr->isSymbol(var))
@@ -423,7 +428,7 @@ void Interpreter::doAt(Interpreter *iptr)
 	}
 	else
 	{
-		std::cerr << "\nError: The variable \"" << var.text << "\" does not exist.\n";
+		std::cerr << "\nError: Cannot perform '@': The variable \"" << var.text << "\" does not exist.\n";
 	}
 }
 
@@ -432,6 +437,8 @@ void Interpreter::doStore(Interpreter *iptr)
 	iptr->checkStackSize(2, "!");
 
 	Token varName = iptr->popStack();
+	validateIdentifier(varName);
+
 	Token val = iptr->popStack();
 
 	//If the variable exists, store its value in its symbol table entry.
@@ -441,7 +448,7 @@ void Interpreter::doStore(Interpreter *iptr)
 	}
 	else
 	{
-		std::cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
+		std::cerr << "\nError: Cannot perform '!': The variable \"" << varName.text << "\" does not exist.\n";
 	}
 }
 
@@ -449,15 +456,10 @@ void Interpreter::doALLOT(Interpreter *iptr)
 {
 	iptr->checkStackSize(2, "ALLOT");
 
-	//size arrayName ALLOT
-	Token arrayName = iptr->popStack();
+	//format: size arrayName ALLOT
 
-	//TODO: Create a custom exception type for this situation and catch that in the mainloop
-	//TODO: ADD THIS FOR ALL VARIABLE OPERATIONS?
-	if (arrayName.type == INTEGER)
-	{
-		throw std::invalid_argument("Cannot use an integer as an identifier.");
-	}
+	Token arrayName = iptr->popStack();
+	validateIdentifier(arrayName);
 
 	Token size = iptr->popStack();
 
@@ -486,6 +488,7 @@ void Interpreter::doArrayAt(Interpreter *iptr)
 	//array index #@
 	Token index = iptr->popStack();
 	Token array = iptr->popStack();
+	validateIdentifier(array);
 
 	//If the array exists and the index is valid, place its value from the
 	//symbol table onto the stack.
@@ -514,6 +517,7 @@ void Interpreter::doArrayStore(Interpreter *iptr)
 	Token index = iptr->popStack();
 	Token array = iptr->popStack();
 	Token val = iptr->popStack();
+	validateIdentifier(array);
 
 	//If the array exists and the index is valid, enter the value into the index
 	if (iptr->isSymbol(array))
