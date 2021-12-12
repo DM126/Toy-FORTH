@@ -1,38 +1,36 @@
 #include <fstream>
 #include "Parser.h"
 
-using namespace std;
-
-Parser::Parser(const string& fileName, const map<string, Symbol>& symbolTable)
+Parser::Parser(const std::string& fileName, const std::map<std::string, Symbol>& symbolTable)
 {
 	symTab = symbolTable;
 
-	ifstream infile(fileName);
+	std::ifstream infile(fileName);
 	if (infile.fail())
 	{
-		throw runtime_error("Error: Could not find file \"" + fileName + "\"");
+		throw std::runtime_error("Error: Could not find file \"" + fileName + "\"");
 	}
 	
 	readInput(infile);
 }
 
-list<Token> Parser::getTokens()
+std::list<Token> Parser::getTokens()
 {
 	return tokensRead;
 }
 
-void Parser::readInput(ifstream& infile)
+void Parser::readInput(std::ifstream& infile)
 {
-	string line;
+	std::string line;
 	
 	while (!infile.eof())
 	{
-		getline(infile, line);
+		std::getline(infile, line);
 		parseLine(line);
 	}
 }
 
-void Parser::parseLine(const string& line)
+void Parser::parseLine(const std::string& line)
 {
 	bool endOfLine = false;
 
@@ -67,7 +65,7 @@ void Parser::parseLine(const string& line)
 	}
 }
 
-Token Parser::readString(const string& str)
+Token Parser::readString(const std::string& str)
 {
 	Token t;
 
@@ -88,7 +86,7 @@ Token Parser::readString(const string& str)
 	return t;
 }
 
-int Parser::readStringLiteral(const string& line, const int i)
+int Parser::readStringLiteral(const std::string& line, const int i)
 {
 	//skip over the (.").
 	int start = i + 2;
@@ -108,7 +106,7 @@ int Parser::readStringLiteral(const string& line, const int i)
 	{
 		//TODO: TEST THIS WHEN CLOSE TO END OF LINE:
 		//Create the substring starting after the (.") and before the (").
-		string text = line.substr(start, end - start);
+		std::string text = line.substr(start, end - start);
 		tokensRead.push_back(Token(text));
 	}
 	//else //TODO: WHAT DO IF STRING DOESNT HAVE END QUOTES?
@@ -119,7 +117,7 @@ int Parser::readStringLiteral(const string& line, const int i)
 	return end;
 }
 
-int Parser::readSingleToken(const string & line, const int i)
+int Parser::readSingleToken(const std::string & line, const int i)
 {
 	int start = i;
 	unsigned int end = start + 1;
@@ -137,7 +135,7 @@ int Parser::readSingleToken(const string & line, const int i)
 		end++;
 	}
 
-	string encountered = line.substr(start, end - start);
+	std::string encountered = line.substr(start, end - start);
 
 	Token newToken;
 	if (isInt)
@@ -154,27 +152,27 @@ int Parser::readSingleToken(const string & line, const int i)
 	return end;
 }
 
-bool Parser::isComment(const string& line, const int i) const
+bool Parser::isComment(const std::string& line, const int i) const
 {
 	return equalsTwoChars(line, i, '/', '/');
 }
 
-bool Parser::isStringLiteral(const string& line, const int i) const
+bool Parser::isStringLiteral(const std::string& line, const int i) const
 {
 	return equalsTwoChars(line, i, '.', '\"');
 }
 
-bool Parser::isStartOfInt(const string& line, const int i) const
+bool Parser::isStartOfInt(const std::string& line, const int i) const
 {
 	return isdigit(line[i]) || (line[i] == '-' && !isEndOfLine(line, i) && isdigit(line[i + 1]));
 }
 
-bool Parser::equalsTwoChars(const string& line, const int i, const char char1, const char char2) const
+bool Parser::equalsTwoChars(const std::string& line, const int i, const char char1, const char char2) const
 {
 	return (line[i] == char1) && !isEndOfLine(line, i) && (line[i + 1] == char2);
 }
 
-bool Parser::isEndOfLine(const string& line, const int i) const
+bool Parser::isEndOfLine(const std::string& line, const int i) const
 {
 	return i == line.length() - 1;
 }

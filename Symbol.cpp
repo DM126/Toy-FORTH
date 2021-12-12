@@ -2,8 +2,6 @@
 #include <algorithm>
 #include "Symbol.h"
 
-using namespace std;
-
 Symbol::Symbol()
 {
 	type = UNKNOWN;
@@ -80,7 +78,7 @@ Symbol::Symbol(const int val)
 	array = nullptr;
 }
 
-Symbol::Symbol(list<Token> functionDef)
+Symbol::Symbol(std::list<Token> functionDef)
 {
 	type = FUNCTION;
 	value = 0;
@@ -111,7 +109,7 @@ Symbol::Symbol(int * arr, const int size)
 	}
 }
 
-Symbol::Symbol(Types type, const int val, list<Token> functionDef, functionPointer fptr, int* arr)
+Symbol::Symbol(Types type, const int val, std::list<Token> functionDef, functionPointer fptr, int* arr)
 {
 	this->type = type;
 	value = val;
@@ -135,7 +133,7 @@ void Symbol::reallocate(const int newSize)
 	if (array != nullptr)
 	{
 		int* newArray = new int[newSize];
-		int smallerSize = min(value, newSize);
+		int smallerSize = std::min(value, newSize);
 		for (int i = 0; i < smallerSize; i++)
 		{
 			newArray[i] = array[i];

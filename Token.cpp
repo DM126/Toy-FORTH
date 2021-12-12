@@ -1,14 +1,12 @@
 #include <string>
 #include "Token.h"
 
-using namespace std;
-
 Token::Token()
 {
 	//Intentionally left blank.
 }
 
-Token::Token(Types type, const string& text, int value)
+Token::Token(Types type, const std::string& text, int value)
 {
 	this->type = type;
 	this->text = text;
@@ -34,7 +32,7 @@ Types Token::getType()
 	return type;
 }
 
-string Token::getText()
+std::string Token::getText()
 {
 	return text;
 }
@@ -45,9 +43,9 @@ int Token::getValue()
 }
 
 //overloaded output operator for Token
-ostream & operator<<(ostream& outstream, const Token& t)
+std::ostream & operator<<(std::ostream& outstream, const Token& t)
 {
-	outstream << typeArray[t.type] << " \"" << t.text << "\" " << t.value << endl;
+	outstream << typeArray[t.type] << " \"" << t.text << "\" " << t.value << std::endl;
 
 	return outstream;
 }

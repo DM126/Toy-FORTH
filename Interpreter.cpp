@@ -3,10 +3,8 @@
 #include "Interpreter.h"
 #include "Parser.h"
 
-using namespace std;
-
 //Sets up the symbol table and begins the parser
-Interpreter::Interpreter(const string& fileName)
+Interpreter::Interpreter(const std::string& fileName)
 {
 	//See Interpreter.h for information on each symbol and their functions.
 	symTab["DUMP"] = Symbol(&doDUMP);
@@ -72,9 +70,9 @@ Interpreter::Interpreter(const string& fileName)
 
 		mainLoop();
 	}
-	catch (runtime_error& e) //If file name is incorrect (TODO: Custom exception?)
+	catch (std::runtime_error& e) //If file name is incorrect (TODO: Custom exception?)
 	{
-		cout << e.what() << endl;
+		std::cerr << e.what() << std::endl;
 	}
 }
 
@@ -99,7 +97,7 @@ void Interpreter::mainLoop()
 			else if (symTab.find(next.text) != symTab.end() && symTab[next.text].type == FUNCTION)
 			{
 				//Add all the tokens from the function definition to the token buffer
-				list<Token> copy = symTab[next.text].functionDef;
+				std::list<Token> copy = symTab[next.text].functionDef;
 				tkBuffer.splice(tkBuffer.begin(), copy);
 			}
 			else
@@ -108,14 +106,14 @@ void Interpreter::mainLoop()
 			}
 		}
 	}
-	catch (underflow_error& e)
+	catch (std::underflow_error& e)
 	{
-		cout << "Parameter stack underflow." << endl;
-		cout << e.what() << endl;
+		std::cout << "Parameter stack underflow." << std::endl;
+		std::cout << e.what() << std::endl;
 	}
-	catch (invalid_argument& e)
+	catch (std::invalid_argument& e)
 	{
-		cout << e.what() << endl;
+		std::cout << e.what() << std::endl;
 	}
 
 	printEndInfo();
@@ -133,7 +131,7 @@ Token Interpreter::nextToken()
 
 //void Interpreter::deleteFunctions()
 //{
-//	map<string, Symbol>::iterator symbol = symTab.begin();
+//	map<std::string, Symbol>::iterator symbol = symTab.begin();
 //	while (symbol != symTab.end())
 //	{
 //		if (symbol->second.type == FUNCTION)
@@ -157,46 +155,46 @@ bool Interpreter::isSymbol(const Token& t)
 	return symTab.find(t.text) != symTab.end();
 }
 
-void Interpreter::checkStackSize(const unsigned int minItems, const string & operationName)
+void Interpreter::checkStackSize(const unsigned int minItems, const std::string & operationName)
 {
 	if (params.size() < minItems)
 	{
-		string message = "Error: Stack needs " + to_string(minItems) + " items for " + operationName + ".";
-		throw underflow_error(message);
+		std::string message = "Error: Stack needs " + std::to_string(minItems) + " items for " + operationName + ".";
+		throw std::underflow_error(message);
 	}
 }
 
 void Interpreter::printSymTab()
 {
-	map<string, Symbol>::iterator itr = symTab.begin();
+	std::map<std::string, Symbol>::iterator itr = symTab.begin();
 	while (itr != symTab.end())
 	{
-		cout << itr->first << " - " << typeArray[itr->second.type] << endl;
+		std::cout << itr->first << " - " << typeArray[itr->second.type] << std::endl;
 		itr++;
 	}
 }
 
 void Interpreter::printTokenBuffer()
 {
-	list<Token>::iterator itr = tkBuffer.begin();
+	std::list<Token>::iterator itr = tkBuffer.begin();
 	while (itr != tkBuffer.end())
 	{
-		cout << *itr << endl;
+		std::cout << *itr << std::endl;
 		itr++;
 	}
 }
 
 void Interpreter::printEndInfo()
 {
-	cout << "\n----------------------------------------\n"
+	std::cout << "\n----------------------------------------\n"
 		<< "End of program\n";
 	if (params.empty())
 	{
-		cout << "Stack parameter empty.\n";
+		std::cout << "Stack parameter empty.\n";
 	}
 	else
 	{
-		cout << params.size() << " item(s) left on the stack.\n";
+		std::cout << params.size() << " item(s) left on the stack.\n";
 	}
 }
 
@@ -205,14 +203,14 @@ void Interpreter::printEndInfo()
 
 void Interpreter::doDUMP(Interpreter *iptr)
 {
-	stack<Token> copy = iptr->params;
-	cout << "DUMP:\n-----------------------------------\n";
+	std::stack<Token> copy = iptr->params;
+	std::cout << "DUMP:\n-----------------------------------\n";
 	while (!copy.empty())
 	{
-		cout << copy.top() << endl;
+		std::cout << copy.top() << std::endl;
 		copy.pop();
 	}
-	cout << "END DUMP\n-----------------------------------\n";
+	std::cout << "END DUMP\n-----------------------------------\n";
 }
 
 
@@ -303,22 +301,22 @@ void Interpreter::doDOT(Interpreter *iptr)
 
 	if (t.type == INTEGER)
 	{
-		cout << t.value;
+		std::cout << t.value;
 	}
 	else
 	{
-		cout << t.text;
+		std::cout << t.text;
 	}
 }
 
 void Interpreter::doCR(Interpreter *iptr)
 {
-	cout << "\n";
+	std::cout << "\n";
 }
 
 void Interpreter::doSP(Interpreter *iptr)
 {
-	cout << " ";
+	std::cout << " ";
 }
 
 void Interpreter::doEMIT(Interpreter * iptr)
@@ -329,7 +327,7 @@ void Interpreter::doEMIT(Interpreter * iptr)
 
 	//TODO: Only allow integer types for EMIT?
 	char ch = t.value;
-	cout << ch;
+	std::cout << ch;
 }
 
 
@@ -396,7 +394,7 @@ void Interpreter::doSET(Interpreter *iptr)
 	//TODO: ADD THIS FOR ALL VARIABLE OPERATIONS?
 	if (varName.type == INTEGER)
 	{
-		throw invalid_argument("Cannot use an integer as an identifier.");
+		throw std::invalid_argument("Cannot use an integer as an identifier.");
 	}
 	
 	Token val = iptr->popStack();
@@ -408,7 +406,7 @@ void Interpreter::doSET(Interpreter *iptr)
 	}
 	else
 	{
-		cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
+		std::cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
 	}
 }
 
@@ -425,7 +423,7 @@ void Interpreter::doAt(Interpreter *iptr)
 	}
 	else
 	{
-		cerr << "\nError: The variable \"" << var.text << "\" does not exist.\n";
+		std::cerr << "\nError: The variable \"" << var.text << "\" does not exist.\n";
 	}
 }
 
@@ -443,7 +441,7 @@ void Interpreter::doStore(Interpreter *iptr)
 	}
 	else
 	{
-		cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
+		std::cerr << "\nError: The variable \"" << varName.text << "\" already exists.\n";
 	}
 }
 
@@ -458,7 +456,7 @@ void Interpreter::doALLOT(Interpreter *iptr)
 	//TODO: ADD THIS FOR ALL VARIABLE OPERATIONS?
 	if (arrayName.type == INTEGER)
 	{
-		throw invalid_argument("Cannot use an integer as an identifier.");
+		throw std::invalid_argument("Cannot use an integer as an identifier.");
 	}
 
 	Token size = iptr->popStack();
@@ -466,7 +464,7 @@ void Interpreter::doALLOT(Interpreter *iptr)
 	//Validate array size is positive
 	if (size.value <= 0)
 	{
-		throw invalid_argument("Arrays must have a positive size.");
+		throw std::invalid_argument("Arrays must have a positive size.");
 	}
 
 	//If the array does not exist, create an array with that size.
@@ -499,12 +497,12 @@ void Interpreter::doArrayAt(Interpreter *iptr)
 		}
 		else
 		{
-			cerr << "\nError: Array index out of bounds: " << index.value << ".\n";
+			std::cerr << "\nError: Array index out of bounds: " << index.value << ".\n";
 		}
 	}
 	else
 	{
-		cerr << "\nError: The array \"" << array.text << "\" does not exist.\n";
+		std::cerr << "\nError: The array \"" << array.text << "\" does not exist.\n";
 	}
 }
 
@@ -526,12 +524,12 @@ void Interpreter::doArrayStore(Interpreter *iptr)
 		}
 		else
 		{
-			cerr << "\nError: Array index out of bounds: " << index.value << ".\n";
+			std::cerr << "\nError: Array index out of bounds: " << index.value << ".\n";
 		}
 	}
 	else
 	{
-		cerr << "\nError: The array \"" << array.text << "\" does not exist.\n";
+		std::cerr << "\nError: The array \"" << array.text << "\" does not exist.\n";
 	}
 }
 
@@ -671,7 +669,7 @@ void Interpreter::doIFTHEN(Interpreter *iptr)
 	if (p.value)
 	{
 		bool foundEnd = false;
-		list<Token> ifBuffer;
+		std::list<Token> ifBuffer;
 
 		do
 		{
@@ -784,7 +782,7 @@ void Interpreter::doIFTHEN(Interpreter *iptr)
 
 void Interpreter::doDO(Interpreter *iptr)
 {
-	list<Token> buffer;
+	std::list<Token> buffer;
 
 	Token next;
 
@@ -813,7 +811,7 @@ void Interpreter::doDO(Interpreter *iptr)
 
 	//Add the saved tokens back to the token buffer and push the created list 
 	//onto the stack of lists
-	list<Token> copy = buffer;
+	std::list<Token> copy = buffer;
 	iptr->loopBuffers.push(buffer);
 	iptr->tkBuffer.splice(iptr->tkBuffer.begin(), copy);
 }
@@ -828,7 +826,7 @@ void Interpreter::doUNTIL(Interpreter *iptr)
 	//otherwise empty the list.
 	if (!p.value)
 	{
-		list<Token> copy = iptr->loopBuffers.top();
+		std::list<Token> copy = iptr->loopBuffers.top();
 		iptr->tkBuffer.splice(iptr->tkBuffer.begin(), copy);
 	}
 	else
@@ -850,11 +848,11 @@ void Interpreter::doDEFINE(Interpreter *iptr)
 
 	if (iptr->isSymbol(function))
 	{
-		cerr << "Error: The identifier \"" << function.text << "\" already exists." << endl;
+		std::cerr << "Error: The identifier \"" << function.text << "\" already exists." << std::endl;
 		return; //TODO: THROW AN EXCEPTION HERE?
 	}
 
-	list<Token> tokens;
+	std::list<Token> tokens;
 
 	//get all tokens until END is encountered
 	Token next = iptr->nextToken();
@@ -888,7 +886,7 @@ void Interpreter::doINPUT(Interpreter * iptr)
 	//TODO: WHAT ABOUT STRINGS????
 	int input;
 
-	cin >> input;
+	std::cin >> input;
 
 	iptr->params.push(Token(input));
 }
@@ -907,15 +905,15 @@ void Interpreter::doOPEN(Interpreter * iptr)
 	//TODO: Should these errors stop execution?
 	if (filename.type == LITERAL)
 	{
-		iptr->file = ifstream(filename.text);
+		iptr->file = std::ifstream(filename.text);
 		if (iptr->file.fail())
 		{
-			cerr << "Error: Could not open file: " << filename.text << "\n";
+			std::cerr << "Error: Could not open file: " << filename.text << "\n";
 		}
 	}
 	else
 	{
-		cerr << "ERROR: File name must be a string.\n";
+		std::cerr << "ERROR: File name must be a string.\n";
 	}
 }
 
@@ -929,6 +927,6 @@ void Interpreter::doREAD(Interpreter * iptr)
 	}
 	else
 	{
-		cerr << "Error: no file is currently open.\n";
+		std::cerr << "Error: no file is currently open.\n";
 	}
 }
