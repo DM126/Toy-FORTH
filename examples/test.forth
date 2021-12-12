@@ -3,7 +3,7 @@
 '\n' DEFINE 10 END //newline char ascii code
 '\0' DEFINE 0 END //null terminating char
 
-."examples/test.txt" OPEN
+."examples/test.forth" OPEN
 255 line ALLOT
 0 i SET
 0 char SET
