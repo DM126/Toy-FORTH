@@ -4,7 +4,7 @@
 
 Symbol::Symbol()
 {
-	type = UNKNOWN;
+	type = Types::UNKNOWN;
 	value = 0;
 	function = nullptr;
 	array = nullptr;
@@ -25,7 +25,7 @@ Symbol::Symbol(const Symbol& other)
 	value = other.value;
 	function = other.function;
 	functionDef = other.functionDef; //TODO Will this work?
-	if (other.type == ARRAY)
+	if (other.type == Types::ARRAY)
 	{
 		array = new int[other.value];
 		for (int i = 0; i < other.value; i++)
@@ -53,7 +53,7 @@ Symbol & Symbol::operator=(const Symbol& rhs)
 		value = rhs.value;
 		function = rhs.function;
 		functionDef = rhs.functionDef; //TODO Will this work?
-		if (rhs.type == ARRAY)
+		if (rhs.type == Types::ARRAY)
 		{
 			array = new int[rhs.value];
 			for (int i = 0; i < rhs.value; i++)
@@ -72,7 +72,7 @@ Symbol & Symbol::operator=(const Symbol& rhs)
 
 Symbol::Symbol(const int val)
 {
-	type = VARIABLE;
+	type = Types::VARIABLE;
 	value = val;
 	function = nullptr;
 	array = nullptr;
@@ -80,7 +80,7 @@ Symbol::Symbol(const int val)
 
 Symbol::Symbol(std::list<Token> const & functionDef)
 {
-	type = FUNCTION;
+	type = Types::FUNCTION;
 	value = 0;
 	this->functionDef = functionDef;
 	function = nullptr;
@@ -89,15 +89,15 @@ Symbol::Symbol(std::list<Token> const & functionDef)
 
 Symbol::Symbol(functionPointer fptr)
 {
-	type = KEYWORD;
+	type = Types::KEYWORD;
 	value = 0;
-	function = fptr;
+	function = std::move(fptr);
 	array = nullptr;
 }
 
 Symbol::Symbol(int * arr, const int size)
 {
-	type = ARRAY;
+	type = Types::ARRAY;
 	value = size;
 	function = nullptr;
 	array = arr;
@@ -114,7 +114,7 @@ Symbol::Symbol(Types type, const int val, std::list<Token> const & functionDef, 
 	this->type = type;
 	value = val;
 	this->functionDef = functionDef;
-	function = fptr;
+	function = std::move(fptr);
 	array = arr;
 }
 

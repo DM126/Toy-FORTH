@@ -15,7 +15,7 @@ Parser::Parser(const std::string& fileName, const std::map<std::string, Symbol, 
 	readInput(infile);
 }
 
-std::list<Token> Parser::getTokens()
+std::list<Token> Parser::getTokens() const
 {
 	return tokensRead;
 }
@@ -79,10 +79,35 @@ Token Parser::readString(const std::string& str)
 	}
 	else
 	{
-		t = Token(UNKNOWN, str, 0);
+		t = Token(Types::UNKNOWN, str, 0);
 	}
 
 	return t;
+}
+
+/**
+ * @brief adds a character to a stringstream. Checks for valid escape characters.
+ * 
+ * @param escaped true if the current char is preceded by a backslash
+ * @param currentChar the current character being processed
+ * @param ss the stringstream to add the character to
+ */
+void addCharToStringStream(bool escaped, char currentChar, std::stringstream & ss)
+{
+	//Add the character or an escape character
+	if (escaped)
+	{
+		switch (currentChar)
+		{
+			case '\"':
+			case '\\': ss << currentChar; break;
+			default: throw std::runtime_error("Parser error: '" + std::string(1, currentChar) + "' is not an escape character");
+		}
+	}
+	else
+	{
+		ss << currentChar;
+	}
 }
 
 int Parser::readStringLiteral(const std::string& line, const unsigned int i)
@@ -107,21 +132,7 @@ int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 		}
 		else
 		{
-			//Add the character or an escape character
-			if (escaped)
-			{
-				switch (currentChar)
-				{
-					case '\"':
-					case '\\': ss << currentChar; break;
-					default: throw std::runtime_error("Parser error: '" + std::string(1, currentChar) + "' is not an escape character");
-				}
-			}
-			else
-			{
-				ss << currentChar;
-			}
-
+			addCharToStringStream(escaped, currentChar, ss);
 			escaped = false;
 		}
 
@@ -138,7 +149,7 @@ int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 
 		//Create the string starting after the (.") and before the (").
 		std::string text = ss.str();
-		tokensRead.emplace_back(Token(text));
+		tokensRead.emplace_back(text);
 	}
 	else
 	{

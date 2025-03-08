@@ -13,7 +13,7 @@ public:
 	Parser(const std::string& fileName, const std::map<std::string, Symbol, std::less<>>& symbolTable);
 
 	//Return all the tokens read by the parser
-	std::list<Token> getTokens();
+	std::list<Token> getTokens() const;
 
 private:
 	//Read through the entire text file line by line (calls parseLine)

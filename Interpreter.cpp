@@ -86,7 +86,7 @@ void Interpreter::mainLoop()
 		{
 			next = nextToken();
 
-			if (next.type == KEYWORD)
+			if (next.type == Types::KEYWORD)
 			{
 				//TODO: WHAT ABOUT VARIABLES?
 				if (symTab[next.text].function != nullptr)
@@ -94,7 +94,7 @@ void Interpreter::mainLoop()
 					symTab[next.text].function(this);
 				}
 			}
-			else if (symTab.find(next.text) != symTab.end() && symTab[next.text].type == FUNCTION)
+			else if (symTab.find(next.text) != symTab.end() && symTab[next.text].type == Types::FUNCTION)
 			{
 				//Add all the tokens from the function definition to the token buffer
 				std::list<Token> copy = symTab[next.text].functionDef;
@@ -169,7 +169,7 @@ void Interpreter::printSymTab()
 	auto itr = symTab.begin();
 	while (itr != symTab.end())
 	{
-		std::cout << itr->first << " - " << typeArray[itr->second.type] << std::endl;
+		std::cout << itr->first << " - " << typeArray[static_cast<int>(itr->second.type)] << std::endl;
 		itr++;
 	}
 }
@@ -299,7 +299,7 @@ void Interpreter::doDOT(Interpreter *iptr)
 
 	Token t = iptr->popStack();
 
-	if (t.type == INTEGER)
+	if (t.type == Types::INTEGER)
 	{
 		std::cout << t.value;
 	}
@@ -383,10 +383,10 @@ void Interpreter::doROT(Interpreter *iptr)
 //Variable operations
 
 //Validates that a variable operation is using a valid identifier.
-void validateIdentifier(Token token)
+void validateIdentifier(Token const & token)
 {
 	//TODO: Create a custom exception type for this situation and catch that in the mainloop
-	if (token.getType() == INTEGER)
+	if (token.getType() == Types::INTEGER)
 	{
 		throw std::invalid_argument("Error: cannot use an integer (" + std::to_string(token.getValue()) + ") as an identifier.");
 	}
@@ -667,118 +667,99 @@ void Interpreter::doIFTHEN(Interpreter *iptr)
 
 	Token p = iptr->popStack();
 
-	int ifThens = 0;
-	int endIfs = 0;
-	Token next;
-
 	if (p.value)
 	{
-		bool foundEnd = false;
 		std::list<Token> ifBuffer;
-
-		do
-		{
-			next = iptr->nextToken();
-
-			if (iptr->isSymbol(next))
-			{
-				if (next.text == "ELSE" && ifThens <= endIfs)
-				{
-					ifThens = 0;
-					endIfs = 0;
-
-					//Skip everything between the else and endif
-					do
-					{
-						next = iptr->nextToken();
-						if (iptr->isSymbol(next))
-						{
-							if (next.text == "IFTHEN")
-							{
-								ifThens++;
-							}
-							else if (next.text == "ENDIF")
-							{
-								endIfs++;
-
-								if (endIfs > ifThens)
-								{
-									foundEnd = true;
-								}
-							}
-						}
-					}
-					while (!foundEnd);
-				}
-				else if (next.text == "IFTHEN")
-				{
-					ifThens++;
-					ifBuffer.push_back(next);
-				}
-				else if (next.text == "ENDIF")
-				{
-					endIfs++;
-					ifBuffer.push_back(next);
-
-					if (endIfs > ifThens)
-					{
-						//no else statement found, end the loop
-						foundEnd = true;
-					}
-				}
-				else
-				{
-					ifBuffer.push_back(next);
-				}
-			}
-			else
-			{
-				ifBuffer.push_back(next);
-			}
-		}
-		while (!foundEnd);
+		addToIfBuffer(iptr, ifBuffer);
 
 		//Add everything found between IFTHEN and ELSE to tokenBuffer
 		iptr->tokenBuffer.splice(iptr->tokenBuffer.begin(), ifBuffer);
 	}
 	else //if the value was false, skip over the tokens inside the if part.
 	{
-		bool foundElse = false;
-
-		//count the number of IFTHEN and ENDIF tokens before the ELSE to skip
-		//any nested if else statements.
-		do
-		{
-			next = iptr->nextToken();
-
-			//if the next token is a keyword, check if it's IFTHEN, ENDIF, or ELSE.
-			if (iptr->isSymbol(next))
-			{
-				if (next.text == "IFTHEN")
-				{
-					ifThens++;
-				}
-				else if (next.text == "ENDIF")
-				{
-					endIfs++;
-
-					if (endIfs > ifThens)
-					{
-						//no else statement found, end the loop
-						foundElse = true;
-					}
-				}
-				else if (next.text == "ELSE" && ifThens <= endIfs)
-				{
-					foundElse = true;
-				}
-			}
-		}
-		while (!foundElse);
+		skipBlock(iptr, true);
 	}
 }
 
+void Interpreter::addToIfBuffer(Interpreter *iptr, std::list<Token> & ifBuffer)
+{
+	bool foundEnd = false;
+	int ifThens = 0;
+	int endIfs = 0;
+	Token next;
 
+	do
+	{
+		next = iptr->nextToken();
+
+		if (iptr->isSymbol(next))
+		{
+			if (next.text == "ELSE" && ifThens <= endIfs)
+			{
+				//Skip everything between the else and endif
+				skipBlock(iptr, false);
+				foundEnd = true;
+			}
+			else if (next.text == "IFTHEN")
+			{
+				ifThens++;
+				ifBuffer.push_back(next);
+			}
+			else if (next.text == "ENDIF")
+			{
+				endIfs++;
+				ifBuffer.push_back(next);
+
+				//no else statement found, end the loop
+				foundEnd = endIfs > ifThens;
+			}
+			else
+			{
+				ifBuffer.push_back(next);
+			}
+		}
+		else
+		{
+			ifBuffer.push_back(next);
+		}
+	}
+	while (!foundEnd);
+}
+
+void Interpreter::skipBlock(Interpreter *iptr, bool skipToElse)
+{
+	int ifThens = 0;
+	int endIfs = 0;
+	Token next;
+	bool foundEnd = false;
+
+	//count the number of IFTHEN and ENDIF tokens before the ELSE to skip
+	//any nested if else statements.
+	do
+	{
+		next = iptr->nextToken();
+
+		//if the next token is a keyword, check if it's IFTHEN, ENDIF, or ELSE.
+		if (iptr->isSymbol(next))
+		{
+			if (next.text == "IFTHEN")
+			{
+				ifThens++;
+			}
+			else if (next.text == "ENDIF")
+			{
+				endIfs++;
+				//if more endifs than ifthens then no else statement was found, end the loop
+				foundEnd = endIfs > ifThens;
+			}
+			else if (skipToElse && next.text == "ELSE" && ifThens <= endIfs)
+			{
+				foundEnd = true;
+			}
+		}
+	}
+	while (!foundEnd);
+}
 
 
 
@@ -908,7 +889,7 @@ void Interpreter::doOPEN(Interpreter * iptr)
 	Token filename = iptr->popStack();
 
 	//TODO: Should these errors stop execution?
-	if (filename.type == LITERAL)
+	if (filename.type == Types::LITERAL)
 	{
 		iptr->file = std::ifstream(filename.text);
 		if (iptr->file.fail())

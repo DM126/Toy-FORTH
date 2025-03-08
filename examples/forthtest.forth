@@ -1,6 +1,6 @@
 
-0 a SET
-DO
+//0 a SET
+//DO
 	0 j SET
 
 	."Test do inside ifthen:" . CR
@@ -78,5 +78,5 @@ DO
 	ENDIF
 
 	CR
-	a @ 1 + a !    //a++
-a @ 3 >= UNTIL     //until a >= 3
+//	a @ 1 + a !    //a++
+//a @ 3 >= UNTIL     //until a >= 3

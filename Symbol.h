@@ -1,12 +1,14 @@
 #ifndef SYMBOL_H
 #define SYMBOL_H
 
+#include <functional>
 #include <list>
+
 #include "Token.h"
 
 //Function pointer used by keyword/operator symbols
 class Interpreter;
-using functionPointer = void (*)(Interpreter *iptr);
+using functionPointer = std::function<void(Interpreter *iptr)>;
 
 //Symbols represent keywords, operators, and variables.
 //Every time a symbol is encountered in the program, it is checked in a map
@@ -66,4 +68,4 @@ private:
 	friend Interpreter;
 };
 
-#endif // !SYMBOL_H
+#endif

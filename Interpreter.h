@@ -243,8 +243,14 @@ private:
 	//interpreter will skip over to the ELSE block and execute that.
 	//IFTHEN/ELSE statements should always end with an ENDIF token.
 	static void doIFTHEN(Interpreter *iptr);
-	//static void doELSE(Interpreter *iptr);
 
+	//Adds everything inside an if block to a buffer, to be added to the token buffer
+	static void addToIfBuffer(Interpreter *iptr, std::list<Token> & ifBuffer);
+
+	//helper function for doIFTHEN. Skips over an if or else block. 
+	//If skipToElse is true, will skip over if block and start at else block,
+	//otherwise will skip to endif.
+	static void skipBlock(Interpreter *iptr, bool skipToElse);
 
 
 

@@ -9,6 +9,7 @@
 ."test 8 \\\"\"" . CR
 //."test 9 should fail: \a" . CR
 //."test 10 should fail
+."\"" . CR
 
 //5638456348563485768 . CR //should fail
 

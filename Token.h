@@ -1,14 +1,15 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+#include <array>
 #include <string>
 #include <ostream>
 
 //Types of tokens
-enum Types { KEYWORD, VARIABLE, LITERAL, INTEGER, ARRAY, FUNCTION, UNKNOWN };
+enum class Types { KEYWORD, VARIABLE, LITERAL, INTEGER, ARRAY, FUNCTION, UNKNOWN };
 
 //for debugging
-const std::string typeArray[] = { "KEYWORD", "VARIABLE", "LITERAL", "INTEGER", "ARRAY", "FUNCTION", "UNKNOWN" };
+const std::array<std::string, 7> typeArray = { "KEYWORD", "VARIABLE", "LITERAL", "INTEGER", "ARRAY", "FUNCTION", "UNKNOWN" };
 
 //Tokens represent every item encountered in the input file.
 class Token
@@ -30,7 +31,11 @@ public:
 	int getValue() const;
 
 	//overloaded output operator
-	friend std::ostream& operator<<(std::ostream& outstream, const Token& t);
+	friend std::ostream& operator<<(std::ostream& outstream, const Token& t){
+		outstream << typeArray[static_cast<int>(t.type)] << " \"" << t.text << "\" " << t.value << std::endl;
+	
+		return outstream;
+	};
 
 private:
 	//The type of token determined by the Types enum

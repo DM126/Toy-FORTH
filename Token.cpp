@@ -12,14 +12,14 @@ Token::Token(Types type, const std::string& text, int value)
 
 Token::Token(const std::string & text)
 {
-	this->type = LITERAL;
+	this->type = Types::LITERAL;
 	this->text = text;
 	this->value = 0;
 }
 
 Token::Token(const int value)
 {
-	this->type = INTEGER;
+	this->type = Types::INTEGER;
 	this->text = "";
 	this->value = value;
 }
@@ -37,12 +37,4 @@ std::string Token::getText() const
 int Token::getValue() const
 {
 	return value;
-}
-
-//overloaded output operator for Token
-std::ostream & operator<<(std::ostream& outstream, const Token& t)
-{
-	outstream << typeArray[t.type] << " \"" << t.text << "\" " << t.value << std::endl;
-
-	return outstream;
 }
