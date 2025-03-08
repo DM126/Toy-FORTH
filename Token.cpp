@@ -1,10 +1,7 @@
 #include <string>
 #include "Token.h"
 
-Token::Token()
-{
-	//Intentionally left blank.
-}
+Token::Token() = default;
 
 Token::Token(Types type, const std::string& text, int value)
 {
@@ -27,17 +24,17 @@ Token::Token(const int value)
 	this->value = value;
 }
 
-Types Token::getType()
+Types Token::getType() const
 {
 	return type;
 }
 
-std::string Token::getText()
+std::string Token::getText() const
 {
 	return text;
 }
 
-int Token::getValue()
+int Token::getValue() const
 {
 	return value;
 }

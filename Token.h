@@ -20,14 +20,14 @@ public:
 	Token(Types type, const std::string& text, const int value);
 
 	//constructor for a string literal token
-	Token(const std::string& text);
+	explicit Token(const std::string& text);
 
 	//constructor for an integer token
-	Token(const int value);
+	explicit Token(const int value);
 
-	Types getType();
-	std::string getText();
-	int getValue();
+	Types getType() const;
+	std::string getText() const;
+	int getValue() const;
 
 	//overloaded output operator
 	friend std::ostream& operator<<(std::ostream& outstream, const Token& t);
@@ -45,4 +45,4 @@ private:
 	friend class Interpreter;
 };
 
-#endif // !TOKEN_H
+#endif

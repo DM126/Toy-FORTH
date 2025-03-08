@@ -6,7 +6,7 @@
 
 //Function pointer used by keyword/operator symbols
 class Interpreter;
-typedef void(*functionPointer)(Interpreter *iptr);
+using functionPointer = void (*)(Interpreter *iptr);
 
 //Symbols represent keywords, operators, and variables.
 //Every time a symbol is encountered in the program, it is checked in a map
@@ -24,23 +24,23 @@ public:
 	Symbol& operator=(const Symbol& rhs);
 
 	//constructor for a variable
-	Symbol(const int val);
+	explicit Symbol(const int val);
 
 	//constructor for a user-defined function symbol
-	Symbol(std::list<Token> functionDef);
+	explicit Symbol(std::list<Token> const & functionDef);
 
 	//constructor for a keyword/operator
-	Symbol(functionPointer fptr);
+	explicit Symbol(functionPointer fptr);
 
 	//constructor for an array symbol
 	Symbol(int* arr, const int size);
 
 	//Generic contructor
-	Symbol(Types type, const int val, std::list<Token> functionDef, functionPointer fptr, int* arr);
+	Symbol(Types type, const int val, std::list<Token> const & functionDef, functionPointer fptr, int* arr);
 
-	Types getType();
+	Types getType() const;
 
-	int getValue();
+	int getValue() const;
 
 	//Reallocates space for an array after if ALLOT is called again. Keeps items
 	//already in the array (as long as they don't get truncated with a smaller

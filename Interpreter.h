@@ -16,7 +16,7 @@ public:
 	//Constructor for the interpreter.
 	//Argument is the name of the text file containing the FORTH code.
 	//Parses the text file, then calls mainLoop().
-	Interpreter(const std::string& fileName);
+	explicit Interpreter(const std::string& fileName);
 
 private:
 	//The main execution of the interpreter.
@@ -39,7 +39,7 @@ private:
 	//If the stack has less items than minItems, throw an underflow_error
 	//exception. The exception will print a message stating the required
 	//number of items and the operation name.
-	void checkStackSize(const unsigned int minItems, const std::string& operationName);
+	void checkStackSize(const unsigned int minItems, const std::string& operationName) const;
 
 	//Debugging function that prints the contents of the symbol table.
 	void printSymTab();
@@ -48,11 +48,11 @@ private:
 	void printTokenBuffer();
 
 	//Print the size of the stack at the end of execution.
-	void printEndInfo();
+	void printEndInfo() const;
 
 	//map for symbols
 	//Holds information on all the keywords/operators, user-defined functions and variables
-	std::map<std::string, Symbol> symTab;
+	std::map<std::string, Symbol, std::less<>> symTab;
 
 	//parameter stack
 	//All tokens that are not keywords/operators are pushed onto

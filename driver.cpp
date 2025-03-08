@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	}
 
 	//Convert the filename argument to a string and run the interpreter
-	std::string filename = std::string(argv[1]);
+	auto filename = std::string(argv[1]);
 	Interpreter interpreter(filename);
 
 	return 0;

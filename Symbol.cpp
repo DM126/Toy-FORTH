@@ -78,7 +78,7 @@ Symbol::Symbol(const int val)
 	array = nullptr;
 }
 
-Symbol::Symbol(std::list<Token> functionDef)
+Symbol::Symbol(std::list<Token> const & functionDef)
 {
 	type = FUNCTION;
 	value = 0;
@@ -109,7 +109,7 @@ Symbol::Symbol(int * arr, const int size)
 	}
 }
 
-Symbol::Symbol(Types type, const int val, std::list<Token> functionDef, functionPointer fptr, int* arr)
+Symbol::Symbol(Types type, const int val, std::list<Token> const & functionDef, functionPointer fptr, int* arr)
 {
 	this->type = type;
 	value = val;
@@ -118,12 +118,12 @@ Symbol::Symbol(Types type, const int val, std::list<Token> functionDef, function
 	array = arr;
 }
 
-Types Symbol::getType()
+Types Symbol::getType() const
 {
 	return type;
 }
 
-int Symbol::getValue()
+int Symbol::getValue() const
 {
 	return value;
 }
@@ -132,7 +132,7 @@ void Symbol::reallocate(const int newSize)
 {
 	if (array != nullptr)
 	{
-		int* newArray = new int[newSize];
+		auto newArray = new int[newSize];
 		int smallerSize = std::min(value, newSize);
 		for (int i = 0; i < smallerSize; i++)
 		{

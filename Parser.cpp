@@ -2,7 +2,7 @@
 #include <sstream>
 #include "Parser.h"
 
-Parser::Parser(const std::string& fileName, const std::map<std::string, Symbol>& symbolTable)
+Parser::Parser(const std::string& fileName, const std::map<std::string, Symbol, std::less<>>& symbolTable)
 {
 	symTab = symbolTable;
 
@@ -138,7 +138,7 @@ int Parser::readStringLiteral(const std::string& line, const unsigned int i)
 
 		//Create the string starting after the (.") and before the (").
 		std::string text = ss.str();
-		tokensRead.push_back(Token(text));
+		tokensRead.emplace_back(Token(text));
 	}
 	else
 	{
@@ -175,7 +175,7 @@ int Parser::readSingleToken(const std::string & line, const unsigned int i)
 		{
 			newToken = Token(stoi(encountered));
 		}
-		catch (std::out_of_range)
+		catch (std::out_of_range&)
 		{
 			throw std::runtime_error("Parser error: int value " + encountered + " is too large");
 		}

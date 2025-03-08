@@ -55,7 +55,7 @@ Interpreter::Interpreter(const std::string& fileName)
 	symTab["END"] = Symbol(nullptr);
 
 	symTab["RANDOM"] = Symbol(&doRANDOM);
-	srand((unsigned int)time(0));
+	srand((unsigned int)time(nullptr));
 
 	symTab["INPUT"] = Symbol(&doINPUT);
 
@@ -155,7 +155,7 @@ bool Interpreter::isSymbol(const Token& t)
 	return symTab.find(t.text) != symTab.end();
 }
 
-void Interpreter::checkStackSize(const unsigned int minItems, const std::string & operationName)
+void Interpreter::checkStackSize(const unsigned int minItems, const std::string & operationName) const
 {
 	if (params.size() < minItems)
 	{
@@ -166,7 +166,7 @@ void Interpreter::checkStackSize(const unsigned int minItems, const std::string 
 
 void Interpreter::printSymTab()
 {
-	std::map<std::string, Symbol>::iterator itr = symTab.begin();
+	auto itr = symTab.begin();
 	while (itr != symTab.end())
 	{
 		std::cout << itr->first << " - " << typeArray[itr->second.type] << std::endl;
@@ -176,7 +176,7 @@ void Interpreter::printSymTab()
 
 void Interpreter::printTokenBuffer()
 {
-	std::list<Token>::iterator itr = tokenBuffer.begin();
+	auto itr = tokenBuffer.begin();
 	while (itr != tokenBuffer.end())
 	{
 		std::cout << *itr << std::endl;
@@ -184,7 +184,7 @@ void Interpreter::printTokenBuffer()
 	}
 }
 
-void Interpreter::printEndInfo()
+void Interpreter::printEndInfo() const
 {
 	std::cout << "\n----------------------------------------\n"
 		<< "End of program\n";
@@ -226,7 +226,7 @@ void Interpreter::doPlus(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 	
 	int results = t2.value + t1.value;
-	iptr->params.push(Token(results));
+	iptr->params.emplace(results);
 }
 
 void Interpreter::doMinus(Interpreter *iptr)
@@ -237,7 +237,7 @@ void Interpreter::doMinus(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value - t1.value;
-	iptr->params.push(Token(results));
+	iptr->params.emplace(results);
 }
 
 void Interpreter::doMultiply(Interpreter *iptr)
@@ -248,7 +248,7 @@ void Interpreter::doMultiply(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value * t1.value;
-	iptr->params.push(Token(results));
+	iptr->params.emplace(results);
 }
 
 void Interpreter::doDivide(Interpreter *iptr)
@@ -259,7 +259,7 @@ void Interpreter::doDivide(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value / t1.value; //TODO: DIV BY ZERO?
-	iptr->params.push(Token(results));
+	iptr->params.emplace(results);
 }
 
 void Interpreter::doMod(Interpreter * iptr)
@@ -270,7 +270,7 @@ void Interpreter::doMod(Interpreter * iptr)
 	Token t2 = iptr->popStack();
 
 	int results = t2.value % t1.value; //TODO: DIV BY ZERO?
-	iptr->params.push(Token(results));
+	iptr->params.emplace(results);
 }
 
 void Interpreter::doNEG(Interpreter * iptr)
@@ -284,7 +284,7 @@ void Interpreter::doNEG(Interpreter * iptr)
 	//MAYBE KEEPING THESE FUNCTIONS CONSISTENT IS A GOOD IDEA? IDK... :/
 	//AND ANOTHER THING: I FEEL LIKE YOU DON'T NEED TO COPY THE POPPED TOKENS,
 	//JUST STORE THE VALUES YOU NEED AND WHO CARES ABOUT THE REST!!!
-	iptr->params.push(Token(-t.value));
+	iptr->params.emplace(-t.value);
 }
 
 
@@ -309,12 +309,12 @@ void Interpreter::doDOT(Interpreter *iptr)
 	}
 }
 
-void Interpreter::doCR(Interpreter *iptr)
+void Interpreter::doCR(Interpreter*)
 {
 	std::cout << "\n";
 }
 
-void Interpreter::doSP(Interpreter *iptr)
+void Interpreter::doSP(Interpreter*)
 {
 	std::cout << " ";
 }
@@ -326,7 +326,7 @@ void Interpreter::doEMIT(Interpreter * iptr)
 	Token t = iptr->popStack();
 
 	//TODO: Only allow integer types for EMIT?
-	char ch = t.value;
+	auto ch = static_cast<char>(t.value);
 	std::cout << ch;
 }
 
@@ -424,7 +424,7 @@ void Interpreter::doAt(Interpreter *iptr)
 	//If the variable exists, place its value from the symbol table onto the stack.
 	if (iptr->isSymbol(var))
 	{
-		iptr->params.push(Token(iptr->symTab[var.text].value));
+		iptr->params.emplace(iptr->symTab[var.text].value);
 	}
 	else
 	{
@@ -472,7 +472,7 @@ void Interpreter::doALLOT(Interpreter *iptr)
 	//If the array does not exist, create an array with that size.
 	if (!iptr->isSymbol(arrayName))
 	{
-		int* arr = new int[size.value];
+		auto arr = new int[size.value];
 		iptr->symTab[arrayName.text] = Symbol(arr, size.value);
 	}
 	else
@@ -496,7 +496,7 @@ void Interpreter::doArrayAt(Interpreter *iptr)
 	{
 		if (index.value >= 0 && index.value < iptr->symTab[array.text].value)
 		{
-			iptr->params.push(Token(iptr->symTab[array.text].array[index.value]));
+			iptr->params.emplace(iptr->symTab[array.text].array[index.value]);
 		}
 		else
 		{
@@ -553,7 +553,7 @@ void Interpreter::doLessThan(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value < right.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doLessThanOrEqual(Interpreter *iptr)
@@ -565,7 +565,7 @@ void Interpreter::doLessThanOrEqual(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value <= right.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doEqualTo(Interpreter *iptr)
@@ -577,7 +577,7 @@ void Interpreter::doEqualTo(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value == right.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doNotEqual(Interpreter *iptr)
@@ -589,7 +589,7 @@ void Interpreter::doNotEqual(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value != right.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doGreaterThanOrEqual(Interpreter *iptr)
@@ -601,7 +601,7 @@ void Interpreter::doGreaterThanOrEqual(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value >= right.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doGreaterThan(Interpreter *iptr)
@@ -613,7 +613,7 @@ void Interpreter::doGreaterThan(Interpreter *iptr)
 	Token left = iptr->popStack();
 
 	bool b = (left.value > right.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 
@@ -631,7 +631,7 @@ void Interpreter::doAND(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	bool b = (t1.value && t2.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doOR(Interpreter *iptr)
@@ -642,7 +642,7 @@ void Interpreter::doOR(Interpreter *iptr)
 	Token t2 = iptr->popStack();
 
 	bool b = (t1.value || t2.value);
-	iptr->params.push(Token(b));
+	iptr->params.emplace(b);
 }
 
 void Interpreter::doNOT(Interpreter *iptr)
@@ -651,7 +651,7 @@ void Interpreter::doNOT(Interpreter *iptr)
 
 	Token t = iptr->popStack();
 
-	iptr->params.push(Token(!t.value));
+	iptr->params.emplace(!t.value);
 }
 
 
@@ -667,7 +667,8 @@ void Interpreter::doIFTHEN(Interpreter *iptr)
 
 	Token p = iptr->popStack();
 
-	int ifThens = 0, endIfs = 0;
+	int ifThens = 0;
+	int endIfs = 0;
 	Token next;
 
 	if (p.value)
@@ -878,7 +879,7 @@ void Interpreter::doDEFINE(Interpreter *iptr)
 
 void Interpreter::doRANDOM(Interpreter * iptr)
 {
-	iptr->params.push(Token(rand()));
+	iptr->params.emplace(rand());
 }
 
 
@@ -892,7 +893,7 @@ void Interpreter::doINPUT(Interpreter * iptr)
 
 	std::cin >> input;
 
-	iptr->params.push(Token(input));
+	iptr->params.emplace(input);
 }
 
 
@@ -927,7 +928,7 @@ void Interpreter::doREAD(Interpreter * iptr)
 	if (iptr->file.is_open())
 	{
 		//TODO: Check for EOF
-		iptr->params.push(Token(iptr->file.get()));
+		iptr->params.emplace(iptr->file.get());
 	}
 	else
 	{

@@ -10,7 +10,7 @@
 class Parser
 {
 public:
-	Parser(const std::string& fileName, const std::map<std::string, Symbol>& symbolTable);
+	Parser(const std::string& fileName, const std::map<std::string, Symbol, std::less<>>& symbolTable);
 
 	//Return all the tokens read by the parser
 	std::list<Token> getTokens();
@@ -58,11 +58,11 @@ private:
 	bool isEndOfLine(const std::string& line, const unsigned int i) const;
 
 	//Symbol table
-	std::map<std::string, Symbol> symTab;
+	std::map<std::string, Symbol, std::less<>> symTab;
 
 	//List of all non-whitespace/non-comment tokens read by the parser in 
 	//the order they were encountered
 	std::list<Token> tokensRead;
 };
 
-#endif // !PARSER_H
+#endif
